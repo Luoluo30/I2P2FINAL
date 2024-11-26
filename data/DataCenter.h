@@ -12,6 +12,7 @@ class Level;
 class Monster;
 class Tower;
 class Bullet;
+class Character;
 
 /**
  * @brief Stores generic global data and relatively small data structures.
@@ -81,6 +82,7 @@ public:
 	 * @brief Raw list of Monster objects.
 	 * @see Monster
 	 */
+	Character *character;
 	std::vector<Monster*> monsters;
 	/**
 	 * @brief Raw list of Tower objects.

@@ -1,6 +1,7 @@
 #include "DataCenter.h"
 #include <cstring>
 #include "../Level.h"
+#include "../Character.h"
 #include "../Player.h"
 #include "../monsters/Monster.h"
 #include "../towers/Tower.h"
@@ -26,6 +27,7 @@ DataCenter::DataCenter() {
 	memset(prev_mouse_state, false, sizeof(prev_mouse_state));
 	player = new Player();
 	level = new Level();
+	character = new Character();
 }
 
 DataCenter::~DataCenter() {

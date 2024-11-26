@@ -7,6 +7,7 @@
 #include "data/FontCenter.h"
 #include "Player.h"
 #include "Level.h"
+#include "Character.h"
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
@@ -131,6 +132,7 @@ Game::game_init() {
 	ui->init();
 
 	DC->level->init();
+	DC->character->init();
 
 	// game start
 	background = IC->get(background_img_path);
@@ -204,6 +206,7 @@ Game::game_update() {
 		DC->player->update();
 		SC->update();
 		ui->update();
+		DC->character->update();
 		if(state != STATE::START) {
 			DC->level->update();
 			OC->update();
@@ -242,6 +245,7 @@ Game::game_draw() {
 		// user interface
 		if(state != STATE::START) {
 			DC->level->draw();
+			DC->character->draw();
 			ui->draw();
 			OC->draw();
 		}
