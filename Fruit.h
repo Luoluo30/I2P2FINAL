@@ -8,11 +8,14 @@
 class Fruit : public Object
 {
 public:
-	Fruit(const Point &p);
+	
+    void init();
 	void update();
 	void draw();
+    
 private:
 	ALLEGRO_BITMAP *bitmap;
+    
 };
 
 #endif
