@@ -3,6 +3,7 @@
 #include "../Level.h"
 #include "../Character.h"
 #include "../Player.h"
+#include "../Fruit.h"
 #include "../monsters/Monster.h"
 #include "../towers/Tower.h"
 #include "../towers/Bullet.h"
@@ -28,6 +29,8 @@ DataCenter::DataCenter() {
 	player = new Player();
 	level = new Level();
 	character = new Character();
+	
+	fruit = new Fruit();
 }
 
 DataCenter::~DataCenter() {
