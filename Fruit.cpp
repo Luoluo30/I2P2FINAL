@@ -6,7 +6,7 @@
 #include "shapes/Rectangle.h"
 
 void Fruit::init() {
-    constexpr char  fruit_img_path[] = "./assets/image/Fruit.png";
+    constexpr char  fruit_img_path[] = "./assets/image/fruit.png";
     DataCenter *DC = DataCenter::get_instance();
     ImageCenter *IC = ImageCenter::get_instance();
     
@@ -15,7 +15,7 @@ void Fruit::init() {
     
 }
 void Fruit::draw() {
-    constexpr char  fruit_img_path[] = "./assets/image/Fruit.png";
+    constexpr char  fruit_img_path[] = "./assets/image/fruit.png";
     ImageCenter *IC = ImageCenter::get_instance();
    
     
