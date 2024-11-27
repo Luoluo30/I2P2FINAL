@@ -3,22 +3,24 @@
 #include "data/ImageCenter.h"
 #include "shapes/Point.h"
 #include <allegro5/bitmap_draw.h>
+#include "shapes/Rectangle.h"
 
 void Fruit::init() {
-
-    
-    ImageCenter *IC = ImageCenter::get_instance();
-    bitmap = IC->get("./assets/image/Fruit.png");
     constexpr char  fruit_img_path[] = "./assets/image/Fruit.png";
-    bitmap = IC->get(fruit_img_path);
-
+    DataCenter *DC = DataCenter::get_instance();
+    ImageCenter *IC = ImageCenter::get_instance();
     
   
-   
+    
+    
 }
+void Fruit::draw() {
+    constexpr char  fruit_img_path[] = "./assets/image/Fruit.png";
+    ImageCenter *IC = ImageCenter::get_instance();
+   
+    
+    bitmap = IC->get(fruit_img_path);
 
-void
-Fruit::draw() {
 	al_draw_bitmap(
 		bitmap,
 		shape->center_x() - al_get_bitmap_width(bitmap)/2,
