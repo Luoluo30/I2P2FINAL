@@ -8,6 +8,7 @@
 #include "Player.h"
 #include "Level.h"
 #include "Character.h"
+#include "Fruit.h"
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
@@ -137,6 +138,7 @@ void Game::game_init() {
     DC->level->init();
     DC->character->init();
 	
+	DC->fruit->init();
     // 游戏开始界面设置
     background = IC->get(background_img_path);
     debug_log("Game state: change to START\n");
@@ -249,6 +251,7 @@ Game::game_draw() {
 		if(state != STATE::START) {
 			DC->level->draw();
 			DC->character->draw();
+			DC->fruit->draw();
 			ui->draw();
 			OC->draw();
 		}
