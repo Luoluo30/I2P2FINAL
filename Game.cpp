@@ -106,39 +106,42 @@ Game::Game() {
 /**
  * @brief Initialize all auxiliary resources.
  */
-void
-Game::game_init() {
-	DataCenter *DC = DataCenter::get_instance();
-	SoundCenter *SC = SoundCenter::get_instance();
-	ImageCenter *IC = ImageCenter::get_instance();
-	FontCenter *FC = FontCenter::get_instance();
-	// set window icon
-	game_icon = IC->get(game_icon_img_path);
-	al_set_display_icon(display, game_icon);
 
-	// register events to event_queue
+void Game::game_init() {
+    DataCenter *DC = DataCenter::get_instance(); // 获取 DataCenter 单例
+    SoundCenter *SC = SoundCenter::get_instance(); // 获取 SoundCenter 单例
+    ImageCenter *IC = ImageCenter::get_instance(); // 获取 ImageCenter 单例
+    FontCenter *FC = FontCenter::get_instance();   // 获取 FontCenter 单例
+
+    // 设置窗口图标
+    game_icon = IC->get(game_icon_img_path);
+    al_set_display_icon(display, game_icon);
+
+    // 注册事件源到事件队列
     al_register_event_source(event_queue, al_get_display_event_source(display));
     al_register_event_source(event_queue, al_get_keyboard_event_source());
     al_register_event_source(event_queue, al_get_mouse_event_source());
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
 
-	// init sound setting
-	SC->init();
+    // 初始化音频设置
+    SC->init();
 
-	// init font setting
-	FC->init();
+    // 初始化字体设置
+    FC->init();
 
-	ui = new UI();
-	ui->init();
+    // 初始化用户界面
+    ui = new UI();
+    ui->init();
 
-	DC->level->init();
-	DC->character->init();
-
-	// game start
-	background = IC->get(background_img_path);
-	debug_log("Game state: change to START\n");
-	state = STATE::START;
-	al_start_timer(timer);
+    // 初始化关卡和角色
+    DC->level->init();
+    DC->character->init();
+	
+    // 游戏开始界面设置
+    background = IC->get(background_img_path);
+    debug_log("Game state: change to START\n");
+    state = STATE::START; // 设置初始状态为 START
+    al_start_timer(timer); // 启动计时器
 }
 
 /**
@@ -269,7 +272,7 @@ Game::game_draw() {
 }
 
 Game::~Game() {
-	al_destroy_display(display);
-	al_destroy_timer(timer);
-	al_destroy_event_queue(event_queue);
+    al_destroy_display(display); // 销毁显示窗口
+    al_destroy_timer(timer);     // 销毁计时器
+    al_destroy_event_queue(event_queue); // 销毁事件队列
 }
