@@ -13,7 +13,7 @@ class Monster;
 class Tower;
 class Bullet;
 class Character;
-
+class Fruit;
 /**
  * @brief Stores generic global data and relatively small data structures.
  * @details The globally used data such as FPS (frames per second), windows size, game region, and states of input devices (mouse and keyboard).
@@ -83,6 +83,8 @@ public:
 	 * @see Monster
 	 */
 	Character *character;
+	
+	Fruit* fruit;
 	std::vector<Monster*> monsters;
 	/**
 	 * @brief Raw list of Tower objects.
