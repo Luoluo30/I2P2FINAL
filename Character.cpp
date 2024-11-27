@@ -4,6 +4,9 @@
 #include "algif5/algif.h"
 #include "shapes/Rectangle.h"
 #include <stdio.h>
+
+class Wall;
+
 namespace CharacterSetting
 {
     static constexpr char gif_root_path[50] = "./assets/gif/Hero";
@@ -62,7 +65,7 @@ void Character::update()
     }
     else if (DC->key_state[ALLEGRO_KEY_SPACE])
     {
-        Character::attack();
+        Character::attack(state);
     }
 }
 
@@ -76,11 +79,23 @@ void Character::draw()
                    0);
 }
 
-void Character::attack()
+Wall *Character::attack(CharacterState state)
 {
-    DataCenter *DC = DataCenter::get_instance();
-    if (state == CharacterState::FRONT){}
-    else if (state == CharacterState::BACK){}
-    else if (state == CharacterState::RIGHT){}
-    else if (state == CharacterState::LEFT){}
+    if(state == CharacterState::FRONT){
+        const Point &p = Point(shape->center_x(), shape->center_y()-30);
+        return new Wall{p, wall_img_path};
+    }
+    else if (state == CharacterState::BACK){
+        const Point &p = Point(shape->center_x(), shape->center_y()+30);
+        return new Wall{p, wall_img_path};
+    }
+    else if (state == CharacterState::LEFT){
+        const Point &p = Point(shape->center_x()-30, shape->center_y());
+        return new Wall{p, wall_img_path};
+    }
+    else if (state == CharacterState::RIGHT){
+        const Point &p = Point(shape->center_x()-30, shape->center_y());
+        return new Wall{p, wall_img_path};
+    }
+    return nullptr;
 }
