@@ -226,53 +226,58 @@ Game::game_update() {
 /**
  * @brief Draw the whole game and objects.
  */
-void
-Game::game_draw() {
-	DataCenter *DC = DataCenter::get_instance();
-	OperationCenter *OC = OperationCenter::get_instance();
-	FontCenter *FC = FontCenter::get_instance();
 
-	// Flush the screen first.
-	al_clear_to_color(al_map_rgb(100, 100, 100));
-	if(state != STATE::END) {
-		// background
-		al_draw_bitmap(background, 0, 0, 0);
-		if(DC->game_field_length < DC->window_width)
-			al_draw_filled_rectangle(
-				DC->game_field_length, 0,
-				DC->window_width, DC->window_height,
-				al_map_rgb(100, 100, 100));
-		if(DC->game_field_length < DC->window_height)
-			al_draw_filled_rectangle(
-				0, DC->game_field_length,
-				DC->window_width, DC->window_height,
-				al_map_rgb(100, 100, 100));
-		// user interface
-		if(state != STATE::START) {
-			DC->level->draw();
-			DC->character->draw();
-			DC->fruit->draw();
-			ui->draw();
-			OC->draw();
-		}
-	}
-	switch(state) {
-		case STATE::START: {
-		} case STATE::LEVEL: {
-			break;
-		} case STATE::PAUSE: {
-			// game layout cover
-			al_draw_filled_rectangle(0, 0, DC->window_width, DC->window_height, al_map_rgba(50, 50, 50, 64));
-			al_draw_text(
-				FC->caviar_dreams[FontSize::LARGE], al_map_rgb(255, 255, 255),
-				DC->window_width/2., DC->window_height/2.,
-				ALLEGRO_ALIGN_CENTRE, "GAME PAUSED");
-			break;
-		} case STATE::END: {
-		}
-	}
-	al_flip_display();
+void Game::game_draw() {
+    DataCenter *DC = DataCenter::get_instance();
+    OperationCenter *OC = OperationCenter::get_instance();
+    FontCenter *FC = FontCenter::get_instance();
+
+    // 清空屏幕
+    al_clear_to_color(al_map_rgb(100, 100, 100));
+    if(state != STATE::END) {
+        // 绘制背景
+        al_draw_bitmap(background, 0, 0, 0);
+        if(DC->game_field_length < DC->window_width)
+            al_draw_filled_rectangle(
+                DC->game_field_length, 0,
+                DC->window_width, DC->window_height,
+                al_map_rgb(100, 100, 100));
+        if(DC->game_field_length < DC->window_height)
+            al_draw_filled_rectangle(
+                0, DC->game_field_length,
+                DC->window_width, DC->window_height,
+                al_map_rgb(100, 100, 100));
+
+        // 用户界面
+        if(state != STATE::START) {
+            DC->level->draw();
+            DC->character->draw();
+          
+            DC->fruit->draw();  // 如果水果存在才绘制
+            
+            ui->draw();
+            OC->draw();
+        }
+    }
+    // 状态切换
+    switch(state) {
+        case STATE::START: {
+        } case STATE::LEVEL: {
+            break;
+        } case STATE::PAUSE: {
+            // 游戏暂停界面
+            al_draw_filled_rectangle(0, 0, DC->window_width, DC->window_height, al_map_rgba(50, 50, 50, 64));
+            al_draw_text(
+                FC->caviar_dreams[FontSize::LARGE], al_map_rgb(255, 255, 255),
+                DC->window_width/2., DC->window_height/2.,
+                ALLEGRO_ALIGN_CENTRE, "GAME PAUSED");
+            break;
+        } case STATE::END: {
+        }
+    }
+    al_flip_display();
 }
+
 
 Game::~Game() {
     al_destroy_display(display); // 销毁显示窗口
