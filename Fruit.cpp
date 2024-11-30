@@ -31,13 +31,14 @@ void Fruit::init() {
     width = al_get_bitmap_width(fruit_bitmap);
     height = al_get_bitmap_height(fruit_bitmap);
 
-    // 初始化形状数据为居中
+    
     shape.reset(new Rectangle{
-        DC->window_width / 2 - width / 2,
-        DC->window_height / 2 - height / 2,
-        DC->window_width / 2 + width / 2,
-        DC->window_height / 2 + height / 2
-    });
+    DC->window_width / 2 - width / 2-50,
+    DC->window_height / 2 - height / 2-50,
+    DC->window_width / 2 + width / 2-50,
+    DC->window_height / 2 + height / 2-50
+});
+
 }
 
 
@@ -58,12 +59,12 @@ void Fruit::draw() {
     }
 
     // 绘制水果图像居中于当前形状
-    al_draw_bitmap(
-        fruit_bitmap,
-        shape->center_x() - width / 2,
-        shape->center_y() - height / 2,
-        0 // 无额外绘制标志
-    );
-}
+  al_draw_bitmap(
+    fruit_bitmap,
+    shape->center_x() - width / 2,
+    shape->center_y() - height / 2,
+    0 // 无额外绘制标志
+);
 
+}
 
