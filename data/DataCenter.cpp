@@ -29,13 +29,15 @@ DataCenter::DataCenter() {
 	player = new Player();
 	level = new Level();
 	character = new Character();
+	fruit = new Fruit;
 	
-	fruit = new Fruit();
+	
 }
 
 DataCenter::~DataCenter() {
 	delete player;
 	delete level;
+	delete fruit;
 	for(Monster *&m : monsters) {
 		delete m;
 	}
