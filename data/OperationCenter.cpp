@@ -4,7 +4,8 @@
 #include "../towers/Tower.h"
 #include "../towers/Bullet.h"
 #include "../Player.h"
-
+#include "../Character.h"
+#include "../Fruit.h"
 void OperationCenter::update() {
 	// Update monsters.
 	_update_monster();
@@ -16,6 +17,7 @@ void OperationCenter::update() {
 	_update_monster_towerBullet();
 	// If any monster reaches the end, hurt the player and delete the monster.
 	_update_monster_player();
+	_update_fruit_character();
 }
 
 void OperationCenter::_update_monster() {
@@ -81,6 +83,17 @@ void OperationCenter::_update_monster_player() {
 			--i;
 		}
 	}
+}
+void OperationCenter::_update_fruit_character() {
+    DataCenter *DC = DataCenter::get_instance();
+    Player *&player = DC->player;
+    Fruit *&fruit = DC->fruit;
+
+    if (fruit->shape->overlap(*(DC->character->shape))) {
+        player->coin += 50;
+		//delete fruit;
+        //fruit = nullptr;
+    }
 }
 
 void OperationCenter::draw() {
