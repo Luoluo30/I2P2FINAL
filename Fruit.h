@@ -1,32 +1,18 @@
-#ifndef FRUIT_H_INCLUDED
-#define FRUIT_H_INCLUDED
-#include <string>
-#include <map>
-#include "Object.h"
-#include "Wall.h"
+#ifndef PLAYER_H_INCLUDED
+#define PLAYER_H_INCLUDED
 
-enum class FruitState
+class Player
 {
-    LEFT,
-    RIGHT,
-    FRONT,
-    BACK,
-    CHARACTERSTATE_MAX
-};
-
-class Fruit : public Object
-{
-
 public:
-    void init();
-    void update();
-    void draw();
-    
-
+	Player();
+	void update();
+	int HP;
+	int coin;
+	int fruit = 0;
 private:
-    FruitState state = FruitState::FRONT; 
-    int width, height;                 
-    std::map<FruitState, std::string> gifPath;
-    
+	int coin_freq;
+	int coin_increase;
+	int coin_counter;
 };
+
 #endif
