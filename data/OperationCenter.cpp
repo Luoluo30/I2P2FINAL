@@ -100,10 +100,11 @@ void OperationCenter::_update_fruit_character() {
 	if (!fruit) {
     cout << "Fruit is nullptr, skipping update." << endl;
     return;
-}
+	}
     if (fruit->shape->overlap(*(DC->character->shape))) {
 		cout<<"overlap"<<endl;
         player->coin += 50;
+		player->fruit+= 1;
 		cout<<"player->coin += 50;"<<endl;
 		std::cout << "Fruit deleted!" << std::endl;
 
