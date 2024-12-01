@@ -16,7 +16,8 @@
 #include <allegro5/allegro_acodec.h>
 #include <vector>
 #include <cstring>
-
+#include <iostream>
+using namespace std;
 // fixed settings
 constexpr char game_icon_img_path[] = "./assets/image/game_icon.png";
 constexpr char game_start_sound_path[] = "./assets/sound/growl.wav";
@@ -113,17 +114,17 @@ void Game::game_init() {
     SoundCenter *SC = SoundCenter::get_instance(); // 获取 SoundCenter 单例
     ImageCenter *IC = ImageCenter::get_instance(); // 获取 ImageCenter 单例
     FontCenter *FC = FontCenter::get_instance();   // 获取 FontCenter 单例
-
+	std::cout << "inited game resourses..." << std::endl;
     // 设置窗口图标
     game_icon = IC->get(game_icon_img_path);
     al_set_display_icon(display, game_icon);
-
+	std::cout << "game icon inited" << std::endl;
     // 注册事件源到事件队列
     al_register_event_source(event_queue, al_get_display_event_source(display));
     al_register_event_source(event_queue, al_get_keyboard_event_source());
     al_register_event_source(event_queue, al_get_mouse_event_source());
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
-
+	std::cout << "event registered" << std::endl;
     // 初始化音频设置
     SC->init();
 
@@ -138,7 +139,11 @@ void Game::game_init() {
     DC->level->init();
     DC->character->init();
 	
+	std::cout << "init fruit..." << std::endl;
+	DC->fruit = std::make_unique<Fruit>();
 	DC->fruit->init();
+	std::cout << "fruit init" << std::endl;
+
     // 游戏开始界面设置
     background = IC->get(background_img_path);
     debug_log("Game state: change to START\n");
@@ -158,15 +163,17 @@ Game::game_update() {
 	OperationCenter *OC = OperationCenter::get_instance();
 	SoundCenter *SC = SoundCenter::get_instance();
 	static ALLEGRO_SAMPLE_INSTANCE *background = nullptr;
-
+	std::cout << "game resourses updated..." << std::endl;
 	switch(state) {
 		case STATE::START: {
 			static bool is_played = false;
 			static ALLEGRO_SAMPLE_INSTANCE *instance = nullptr;
+			cout<<"case STATE::START"<<endl;
 			if(!is_played) {
 				instance = SC->play(game_start_sound_path, ALLEGRO_PLAYMODE_ONCE);
 				DC->level->load_level(1);
 				is_played = true;
+				cout<<"!is_played"<<endl;
 			}
 
 			if(!SC->is_playing(instance)) {
@@ -176,15 +183,18 @@ Game::game_update() {
 			break;
 		} case STATE::LEVEL: {
 			static bool BGM_played = false;
+			cout<<"case STATE::LEVEL"<<endl;
 			if(!BGM_played) {
 				background = SC->play(background_sound_path, ALLEGRO_PLAYMODE_LOOP);
 				BGM_played = true;
+				cout<<"!BGM_played"<<endl;
 			}
 
 			if(DC->key_state[ALLEGRO_KEY_P] && !DC->prev_key_state[ALLEGRO_KEY_P]) {
 				SC->toggle_playing(background);
 				debug_log("<Game> state: change to PAUSE\n");
 				state = STATE::PAUSE;
+				
 			}
 			if(DC->level->remain_monsters() == 0 && DC->monsters.size() == 0) {
 				debug_log("<Game> state: change to END\n");
@@ -208,18 +218,34 @@ Game::game_update() {
 	}
 	// If the game is not paused, we should progress update.
 	if(state != STATE::PAUSE) {
+		cout<<"state != STATE::PAUSE"<<endl;
 		DC->player->update();
+		cout<<"DC->player->update();"<<endl;
 		SC->update();
+		cout<<"SC->update();"<<endl;
 		ui->update();
+		cout<<"ui->update();"<<endl;
 		DC->character->update();
+		cout<<"character->update();"<<endl;
 		if(state != STATE::START) {
+			cout<<"state != STATE::START"<<endl;
 			DC->level->update();
+			cout<<"DC->level->update();"<<endl;
+			if (OC == nullptr) {
+    			std::cerr << "OperationCenter instance is nullptr!" << std::endl;
+			} else {
+    		std::cout << "OperationCenter instance exists!" << std::endl;
+			}
+
 			OC->update();
+			cout<<"oc->update"<<endl;
 		}
+		cout<<"state != STATE::PAUSE end"<<endl;
 	}
 	// game_update is finished. The states of current frame will be previous states of the next frame.
 	memcpy(DC->prev_key_state, DC->key_state, sizeof(DC->key_state));
 	memcpy(DC->prev_mouse_state, DC->mouse_state, sizeof(DC->mouse_state));
+	cout<<"game_update is finished"<<endl;
 	return true;
 }
 
@@ -231,7 +257,7 @@ void Game::game_draw() {
     DataCenter *DC = DataCenter::get_instance();
     OperationCenter *OC = OperationCenter::get_instance();
     FontCenter *FC = FontCenter::get_instance();
-
+	cout<<"game_draw"<<endl;
     // 清空屏幕
     al_clear_to_color(al_map_rgb(100, 100, 100));
     if(state != STATE::END) {
@@ -252,9 +278,16 @@ void Game::game_draw() {
         if(state != STATE::START) {
             DC->level->draw();
             DC->character->draw();
-          
-            DC->fruit->draw();  // 如果水果存在才绘制
-            
+			cout<<"A"<<endl;
+            if(DC->fruit){
+				DC->fruit->draw();  // 如果水果存在才绘制
+				//cout<<"draw fruit"<<endl;
+			}
+            else if (DC->fruit == nullptr) {
+    			std::cout << "Fruit is nullptr!" << std::endl;
+			}
+			cout<<"B"<<endl;
+
             ui->draw();
             OC->draw();
         }
@@ -280,6 +313,7 @@ void Game::game_draw() {
 
 
 Game::~Game() {
+	delete ui;
     al_destroy_display(display); // 销毁显示窗口
     al_destroy_timer(timer);     // 销毁计时器
     al_destroy_event_queue(event_queue); // 销毁事件队列
