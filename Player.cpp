@@ -6,6 +6,7 @@ namespace PlayerSetting {
 	constexpr int init_coin = 100;
 	constexpr int coin_freq = 60;
 	constexpr int coin_increase = 5;
+	constexpr int fruit_count = 0;
 };
 
 Player::Player() : HP(PlayerSetting::init_HP), coin(PlayerSetting::init_coin) {
