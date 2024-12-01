@@ -6,6 +6,7 @@
 #include <allegro5/keycodes.h>
 #include <allegro5/mouse.h>
 #include "../shapes/Point.h"
+#include <memory>  // For smart pointers
 
 class Player;
 class Level;
@@ -84,7 +85,7 @@ public:
 	 */
 	Character *character;
 	
-	Fruit* fruit;
+	std::unique_ptr<Fruit> fruit;
 	std::vector<Monster*> monsters;
 	/**
 	 * @brief Raw list of Tower objects.
