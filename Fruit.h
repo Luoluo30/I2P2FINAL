@@ -14,7 +14,6 @@ enum class FruitState
     CHARACTERSTATE_MAX
 };
 
-
 class Fruit : public Object
 {
 
@@ -25,9 +24,8 @@ public:
     
 
 private:
-    FruitState state = FruitState::FRONT; // the state of character
-                 // the move speed of hero
-    int width, height;                  // the width and height of the hero image
+    FruitState state = FruitState::FRONT; 
+    int width, height;                 
     std::map<FruitState, std::string> gifPath;
     
 };
