@@ -137,12 +137,28 @@ UI::draw() {
 	for(int i = 1; i <= player_HP; ++i) {
 		al_draw_bitmap(love, game_field_length - (love_width + love_img_padding) * i, love_img_padding, 0);
 	}
+	
 	// draw coin
+	// 取得玩家的金幣數量
 	const int &player_coin = DC->player->coin;
+
+	// 使用指定字體和顏色繪製 "coin: " 字串並顯示玩家的金幣數量
 	al_draw_textf(
-		FC->courier_new[FontSize::MEDIUM], al_map_rgb(0, 0, 0),
-		game_field_length+love_img_padding, love_img_padding,
-		ALLEGRO_ALIGN_LEFT, "coin: %5d", player_coin);
+    FC->courier_new[FontSize::MEDIUM], // 使用中等大小的字體 (courier_new)
+    al_map_rgb(0, 0, 0),// 字體顏色設為黑色
+    game_field_length + love_img_padding,  // 顯示位置的 X 座標：在遊戲區域的長度後加上額外的邊距 (love_img_padding)
+    love_img_padding,// 顯示位置的 Y 座標：在頂部加上邊距 (love_img_padding)
+    ALLEGRO_ALIGN_LEFT, // 文字對齊方式：左對齊
+    "coin: %5d", player_coin// 顯示文字："coin: " 以及玩家的金幣數量
+	);
+
+
+	// draw fruit
+	const int &player_fruit = DC->player->fruit;
+	al_draw_textf(
+		FC->courier_new[FontSize::MEDIUM], al_map_rgb(0,0, 20),
+		game_field_length+love_img_padding, 550,
+		ALLEGRO_ALIGN_LEFT, "Fruit: %5d", player_fruit);
 	// draw tower shop items
 	for(auto &[bitmap, p, price] : tower_items) {
 		int w = al_get_bitmap_width(bitmap);
