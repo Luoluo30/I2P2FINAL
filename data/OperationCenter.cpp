@@ -6,18 +6,26 @@
 #include "../Player.h"
 #include "../Character.h"
 #include "../Fruit.h"
+#include <iostream>
+using namespace std;
 void OperationCenter::update() {
 	// Update monsters.
 	_update_monster();
+	cout<<"_update_monster();"<<endl;
 	// Update towers.
 	_update_tower();
+	cout<<"_update_tower();"<<endl;
 	// Update tower bullets.
 	_update_towerBullet();
+	cout<<"_update_towerBullet();"<<endl;
 	// If any bullet overlaps with any monster, we delete the bullet, reduce the HP of the monster, and delete the monster if necessary.
 	_update_monster_towerBullet();
+	cout<<"_update_monster_towerBullet();"<<endl;
 	// If any monster reaches the end, hurt the player and delete the monster.
 	_update_monster_player();
+	cout<<"_update_monster_player();"<<endl;
 	_update_fruit_character();
+	cout<<"_update_fruit_character();"<<endl;
 }
 
 void OperationCenter::_update_monster() {
@@ -87,12 +95,21 @@ void OperationCenter::_update_monster_player() {
 void OperationCenter::_update_fruit_character() {
     DataCenter *DC = DataCenter::get_instance();
     Player *&player = DC->player;
-    Fruit *&fruit = DC->fruit;
-
+    std::unique_ptr<Fruit>& fruit = DC->fruit; // No need for a reference to raw pointer
+	cout<<"before if"<<endl;
+	if (!fruit) {
+    cout << "Fruit is nullptr, skipping update." << endl;
+    return;
+}
     if (fruit->shape->overlap(*(DC->character->shape))) {
+		cout<<"overlap"<<endl;
         player->coin += 50;
-		//delete fruit;
-        //fruit = nullptr;
+		cout<<"player->coin += 50;"<<endl;
+		std::cout << "Fruit deleted!" << std::endl;
+
+		fruit = nullptr; // 防止后续对已删除对象的访问
+		std::cout << "fruit = nullptr;" << std::endl;
+		cout<<"overlap finished"<<endl;
     }
 }
 
