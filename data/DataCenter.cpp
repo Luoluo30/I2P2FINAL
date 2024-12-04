@@ -30,11 +30,14 @@ DataCenter::DataCenter() {
 	level = new Level();
 	character = new Character();
 	fruit = std::make_unique<Fruit>();
+	
+	
 }
 
 DataCenter::~DataCenter() {
 	delete player;
 	delete level;
+	
 	for(Monster *&m : monsters) {
 		delete m;
 	}
