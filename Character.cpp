@@ -5,8 +5,6 @@
 #include "shapes/Rectangle.h"
 #include <stdio.h>
 
-class Wall;
-
 namespace CharacterSetting
 {
     static constexpr char gif_root_path[50] = "./assets/gif/Hero";
@@ -69,6 +67,7 @@ void Character::update()
     }
 }
 
+
 void Character::draw()
 {
     GIFCenter *GIFC = GIFCenter::get_instance();
@@ -84,19 +83,19 @@ Wall *Character::attack(CharacterState state)
     DataCenter* DC = DataCenter::get_instance();
     Wall* wall;
     if(state == CharacterState::FRONT){
-        const Point &p = Point(shape->center_x(), shape->center_y()+100);
+        const Point &p = Point(shape->center_x(), shape->center_y()+height);
         wall = new Wall{p, wall_img_path};
     }
     else if (state == CharacterState::BACK){
-        const Point &p = Point(shape->center_x(), shape->center_y()-100);
+        const Point &p = Point(shape->center_x(), shape->center_y()-height);
         wall = new Wall{p, wall_img_path};
     }
     else if (state == CharacterState::LEFT){
-        const Point &p = Point(shape->center_x()+100, shape->center_y());
+        const Point &p = Point(shape->center_x()-width, shape->center_y());
         wall = new Wall{p, wall_img_path};
     }
     else if (state == CharacterState::RIGHT){
-        const Point &p = Point(shape->center_x()-100, shape->center_y());
+        const Point &p = Point(shape->center_x()+width, shape->center_y());
         wall = new Wall{p, wall_img_path};
     }
     else

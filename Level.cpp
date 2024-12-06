@@ -7,6 +7,7 @@
 #include "shapes/Point.h"
 #include "shapes/Rectangle.h"
 #include <array>
+#include "Wall.h"
 
 using namespace std;
 
@@ -66,7 +67,26 @@ Level::load_level(int lvl) {
 		int h = num / grid_h;
 		road_path.emplace_back(w, h);
 	}
+
+	// wall
+	std::vector<Point> wall_positions = {
+        Point(25, 25), Point(25, 75), Point(25, 125), Point(25, 175), Point(25, 225), Point(25, 275), Point(25, 325), Point(25, 375), Point(25, 425), Point(25, 475), Point(25, 525), Point(25, 575), Point(25, 625), 
+		
+		Point(575, 25), Point(575, 75), Point(575, 125), Point(575, 175), Point(575, 225), Point(575, 275), Point(575, 325), Point(575, 375), Point(575, 425), Point(575, 475), Point(575, 525), Point(575, 575), Point(575, 625),
+
+		Point(75, 25), Point(125, 25), Point(175, 25), Point(225, 25), Point(275, 25), Point(325, 25), Point(375, 25), Point(425, 25), Point(475, 25), Point(525, 25),
+
+
+    };
+
+    for (const Point &pos : wall_positions) {
+        Wall *wall = new Wall(pos, "./assets/image/Wall.jpg");
+        DC->walls.push_back(wall);
+    }
+
 	debug_log("<Level> load level %d.\n", lvl);
+
+	
 }
 
 /**

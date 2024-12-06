@@ -18,14 +18,9 @@ void Wall::update() {
 }
 
 void Wall::draw() {
-    al_draw_scaled_bitmap(
+    al_draw_bitmap(
         bitmap,
-        0, 0,              
-        width,        
-        height,      
-        shape->center_x() - width / 20,  
-        shape->center_y() - height / 20, 
-        width / 10,  
-        height / 10,   
-        0);                             
+        shape->center_x() - width, 
+        shape->center_y() - height, 
+        0);                            
 }
