@@ -10,10 +10,13 @@ class Wall : public Object
 public:
     Wall(const Point &p, const std::string &path);
 	void update();
-    void draw();                    
+    void draw();
+                  
 
 private:
-    ALLEGRO_BITMAP *bitmap;          
+    ALLEGRO_BITMAP *bitmap;
+    double width;
+    double height;     
 };
 
 #endif

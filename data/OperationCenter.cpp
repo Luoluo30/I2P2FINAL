@@ -6,9 +6,13 @@
 #include "../Player.h"
 #include "../Character.h"
 #include "../Fruit.h"
+#include "../Wall.h"
 #include <iostream>
 using namespace std;
 void OperationCenter::update() {
+	// Update walls.
+	_update_wall();
+	cout<<"_update_wall();"<<endl;
 	// Update monsters.
 	_update_monster();
 	cout<<"_update_monster();"<<endl;
@@ -26,6 +30,12 @@ void OperationCenter::update() {
 	cout<<"_update_monster_player();"<<endl;
 	_update_fruit_character();
 	cout<<"_update_fruit_character();"<<endl;
+}
+
+void OperationCenter::_update_wall() {
+	std::vector<Wall*> &walls = DataCenter::get_instance()->walls;
+	for(Wall *wall : walls)
+		wall->update();
 }
 
 void OperationCenter::_update_monster() {
@@ -115,9 +125,16 @@ void OperationCenter::_update_fruit_character() {
 }
 
 void OperationCenter::draw() {
+	_draw_wall();
 	_draw_monster();
 	_draw_tower();
 	_draw_towerBullet();
+}
+
+void OperationCenter::_draw_wall() {
+	std::vector<Wall*> &walls = DataCenter::get_instance()->walls;
+	for(Wall *wall : walls)
+		wall->draw();
 }
 
 void OperationCenter::_draw_monster() {

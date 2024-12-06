@@ -81,21 +81,27 @@ void Character::draw()
 
 Wall *Character::attack(CharacterState state)
 {
+    DataCenter* DC = DataCenter::get_instance();
+    Wall* wall;
     if(state == CharacterState::FRONT){
-        const Point &p = Point(shape->center_x(), shape->center_y()-30);
-        return new Wall{p, wall_img_path};
+        const Point &p = Point(shape->center_x(), shape->center_y()+100);
+        wall = new Wall{p, wall_img_path};
     }
     else if (state == CharacterState::BACK){
-        const Point &p = Point(shape->center_x(), shape->center_y()+30);
-        return new Wall{p, wall_img_path};
+        const Point &p = Point(shape->center_x(), shape->center_y()-100);
+        wall = new Wall{p, wall_img_path};
     }
     else if (state == CharacterState::LEFT){
-        const Point &p = Point(shape->center_x()-30, shape->center_y());
-        return new Wall{p, wall_img_path};
+        const Point &p = Point(shape->center_x()+100, shape->center_y());
+        wall = new Wall{p, wall_img_path};
     }
     else if (state == CharacterState::RIGHT){
-        const Point &p = Point(shape->center_x()-30, shape->center_y());
-        return new Wall{p, wall_img_path};
+        const Point &p = Point(shape->center_x()-100, shape->center_y());
+        wall = new Wall{p, wall_img_path};
     }
-    return nullptr;
+    else
+        return nullptr;
+    DC->walls.push_back(wall);
+    return wall;
+
 }

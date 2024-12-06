@@ -4,6 +4,7 @@
 #include "../Character.h"
 #include "../Player.h"
 #include "../Fruit.h"
+#include "../Wall.h"
 #include "../monsters/Monster.h"
 #include "../towers/Tower.h"
 #include "../towers/Bullet.h"
@@ -37,7 +38,9 @@ DataCenter::DataCenter() {
 DataCenter::~DataCenter() {
 	delete player;
 	delete level;
-	
+	for(Wall *&w : walls){
+		delete w;
+	}
 	for(Monster *&m : monsters) {
 		delete m;
 	}
