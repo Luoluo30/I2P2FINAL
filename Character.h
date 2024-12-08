@@ -22,7 +22,9 @@ public:
     void init();
     void update();
     void draw();
-    Wall *attack(CharacterState state);
+    bool ch_interact(const Point &next);
+    bool wall_interact(const Point &next);
+    void attack(CharacterState state);
 
 private:
     CharacterState state = CharacterState::FRONT; // the state of character

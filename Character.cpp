@@ -4,6 +4,7 @@
 #include "algif5/algif.h"
 #include "shapes/Rectangle.h"
 #include <stdio.h>
+#include <string>
 
 namespace CharacterSetting
 {
@@ -41,30 +42,54 @@ void Character::init()
 void Character::update()
 {
     DataCenter *DC = DataCenter::get_instance();
+    Point original{shape->center_x(), shape->center_y()};
+    Point next = original;
     if (DC->key_state[ALLEGRO_KEY_W])
     {
-        shape->update_center_y(shape->center_y() - speed);
+        next.y -= speed;
+        //shape->update_center_y(shape->center_y() - speed);
         state = CharacterState::BACK;
     }
     else if (DC->key_state[ALLEGRO_KEY_A])
     {
-        shape->update_center_x(shape->center_x() - speed);
+        next.x -= speed;
+        //shape->update_center_x(shape->center_x() - speed);
         state = CharacterState::LEFT;
     }
     else if (DC->key_state[ALLEGRO_KEY_S])
     {
-        shape->update_center_y(shape->center_y() + speed);
+        next.y += speed;
+        //shape->update_center_y(shape->center_y() + speed);
         state = CharacterState::FRONT;
     }
     else if (DC->key_state[ALLEGRO_KEY_D])
     {
-        shape->update_center_x(shape->center_x() + speed);
+        next.x += speed;
+        //shape->update_center_x(shape->center_x() + speed);
         state = CharacterState::RIGHT;
     }
     else if (DC->key_state[ALLEGRO_KEY_SPACE])
     {
         Character::attack(state);
     }
+    if(!Character::ch_interact(next)){
+        shape->update_center_x(next.x);
+        shape->update_center_y(next.y);
+    }
+}
+
+bool Character::ch_interact(const Point &next){
+    DataCenter *DC = DataCenter::get_instance();
+    Rectangle next_hitbox{
+        next.x   , next.y,
+        next.x + width  , next.y + height 
+    };
+    for (const auto &wall : DC->walls) {
+        if (wall->hitbox->overlap(next_hitbox)) {
+            return true;
+        }
+    }
+    return false; 
 }
 
 
@@ -78,29 +103,77 @@ void Character::draw()
                    0);
 }
 
-Wall *Character::attack(CharacterState state)
+void Character::attack(CharacterState state)
 {
     DataCenter* DC = DataCenter::get_instance();
     Wall* wall;
     if(state == CharacterState::FRONT){
-        const Point &p = Point(shape->center_x(), shape->center_y()+height);
-        wall = new Wall{p, wall_img_path};
+        int space = 0;
+        while (true) {
+            const Point p(shape->center_x(), shape->center_y() + height + space);
+            printf("11111111111111\n");
+            if (Character::wall_interact(p) || p.y > 625) {
+                break;
+            }
+            wall = new Wall{p, wall_img_path};
+            DC->walls.push_back(wall);
+            space += 50;
+        }
     }
     else if (state == CharacterState::BACK){
-        const Point &p = Point(shape->center_x(), shape->center_y()-height);
-        wall = new Wall{p, wall_img_path};
+        int space = 50;
+        while (true) {
+            const Point p(shape->center_x(), shape->center_y() - space);
+            printf("^^^^^^^^^^^^^\n");
+            if (Character::wall_interact(p) || p.y < 0) {
+                break;
+            }
+            wall = new Wall{p, wall_img_path};
+            DC->walls.push_back(wall);
+            space += 50;
+        }
     }
     else if (state == CharacterState::LEFT){
-        const Point &p = Point(shape->center_x()-width, shape->center_y());
-        wall = new Wall{p, wall_img_path};
+        int space = 50;
+        while (true) {
+            const Point p(shape->center_x() - space, shape->center_y());
+            printf("<<<<<<<<<<<\n");
+            if (Character::wall_interact(p) || p.x < 0) {
+                break;
+            }
+            wall = new Wall{p, wall_img_path};
+            DC->walls.push_back(wall);
+            space += 50;
+        }
     }
     else if (state == CharacterState::RIGHT){
-        const Point &p = Point(shape->center_x()+width, shape->center_y());
-        wall = new Wall{p, wall_img_path};
+        int space = 0;
+        while (true) {
+            const Point p(shape->center_x()+ width + space, shape->center_y());
+            printf(">>>>>>>>>>>>>>>>>\n");
+            if (Character::wall_interact(p) || p.x > 575) {
+                break;
+            }
+            wall = new Wall{p, wall_img_path};
+            DC->walls.push_back(wall);
+            space += 50;
+        }
     }
     else
-        return nullptr;
-    DC->walls.push_back(wall);
-    return wall;
+        return;  
 
+}
+
+bool Character::wall_interact(const Point &next){
+    DataCenter *DC = DataCenter::get_instance();
+    Rectangle next_hitbox{
+        next.x   , next.y,
+        next.x + 50  , next.y + 48
+    };
+    for (const auto &wall : DC->walls) {
+        if (wall->hitbox->overlap(next_hitbox)) {
+            return true;
+        }
+    }
+    return false; 
 }

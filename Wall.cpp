@@ -11,6 +11,7 @@ Wall::Wall(const Point &p, const std::string &path) {
     width = al_get_bitmap_width(bitmap);
     height = al_get_bitmap_height(bitmap);
     shape.reset(new Rectangle{p.x, p.y, p.x+width, p.y+height});
+    hitbox = new Rectangle{p.x, p.y, p.x+width, p.y+height};
 }
 
 void Wall::update() {
