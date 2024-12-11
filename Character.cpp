@@ -32,56 +32,171 @@ void Character::init()
     DataCenter *DC = DataCenter::get_instance();
     GIFCenter *GIFC = GIFCenter::get_instance();
     ALGIF_ANIMATION *gif = GIFC->get(gifPath[state]);
-    width = gif->width;
-    height = gif->height;
-    shape.reset(new Rectangle{375,
-                              350,
-                              375 + width,
-                              350 + height});
+    width = 43;
+    height = 43;
+    shape.reset(new Rectangle{300,
+                              300,
+                              300 + width,
+                              300 + height});
 }
 
+// void Character::update()
+// {
+//     static double last_input_time = 0; // 上一次按键检测的时间
+//     double current_time = al_get_time(); // 获取当前时间
+
+//     // 检查是否超过 0.1 秒（100 毫秒）的等待时间
+//     if (current_time - last_input_time < 0.18) {
+//         return; // 如果不足 0.1 秒，则直接返回，不处理按键
+//     }
+//     static Point target = {shape->center_x(), shape->center_y()}; // 目标位置
+//     DataCenter *DC = DataCenter::get_instance();
+//     Point original{shape->center_x(), shape->center_y()};
+//     Point next = original;
+//     if (DC->key_state[ALLEGRO_KEY_W])
+//     {
+//         target = Point(original.x, original.y - 50);
+//         //shape->update_center_y(shape->center_y() - speed);
+//         state = CharacterState::BACK;
+//         last_input_time = current_time;
+//         if(!Character::ch_interact(target)){
+//             while(next.y>=target.y){
+//                 double start_time = al_get_time();
+//                 shape->update_center_y(next.y);
+//                 al_flip_display();
+//                 next.y -= speed;
+//                 while (al_get_time() - start_time < 0.005);
+//             } 
+//             next.y = target.y;
+//             shape->update_center_y(next.y);
+//         } 
+//     }
+//     else if (DC->key_state[ALLEGRO_KEY_A])
+//     {
+//         target = Point(original.x - 50, original.y);
+//         //shape->update_center_x(shape->center_x() - speed);
+//         state = CharacterState::LEFT;
+//         last_input_time = current_time;
+//         if(!Character::ch_interact(target)){
+//             while(next.x>=target.x){
+//                 double start_time = al_get_time();
+//                 shape->update_center_x(next.x);
+//                 al_flip_display();
+//                 next.x -= speed;
+//                 while (al_get_time() - start_time < 0.005);
+//             }
+//             next.x = target.x;
+//             shape->update_center_x(next.x);
+//         }
+//     }
+//     else if (DC->key_state[ALLEGRO_KEY_S])
+//     {
+//         target = Point(original.x, original.y + 50);
+//         //shape->update_center_y(shape->center_y() + speed);
+//         state = CharacterState::FRONT;
+//         last_input_time = current_time;
+//         if(!Character::ch_interact(target)){
+//             while(next.y<=target.y){
+//                 double start_time = al_get_time();
+//                 shape->update_center_y(next.y);
+//                 al_flip_display();
+//                 next.y += speed;
+//                 while (al_get_time() - start_time < 0.005);
+//             }
+//             next.y = target.y;
+//             shape->update_center_y(next.y);
+//         } 
+//     }
+//     else if (DC->key_state[ALLEGRO_KEY_D])
+//     {
+//         target = Point(original.x + 50, original.y);
+//         //shape->update_center_x(shape->center_x() + speed);
+//         state = CharacterState::RIGHT;
+//         last_input_time = current_time;
+//         if(!Character::ch_interact(target)){
+//             while(next.x<=target.x){
+//                 double start_time = al_get_time();
+//                 shape->update_center_x(next.x);
+//                 al_flip_display();
+//                 next.x += speed;
+//                 while (al_get_time() - start_time < 0.005);
+//             }
+//             next.x = target.x;
+//             shape->update_center_x(next.x);
+//         }
+
+//     }
+//     else if (DC->key_state[ALLEGRO_KEY_X])
+//     {
+//         Character::delete_wall(state);
+//         last_input_time = current_time;
+//     }
+//     else if (DC->key_state[ALLEGRO_KEY_SPACE])
+//     {
+//         Character::attack(state);
+//         last_input_time = current_time;
+//     }
+
+// }
 void Character::update()
 {
+    static Point target = {shape->center_x(), shape->center_y()}; 
+    static bool is_moving = false; 
+
     DataCenter *DC = DataCenter::get_instance();
-    Point original{shape->center_x(), shape->center_y()};
-    Point next = original;
-    if (DC->key_state[ALLEGRO_KEY_W])
-    {
-        next.y -= speed;
-        //shape->update_center_y(shape->center_y() - speed);
-        state = CharacterState::BACK;
+    Point next = {shape->center_x(), shape->center_y()};
+
+    if (!is_moving) {
+        if (DC->key_state[ALLEGRO_KEY_W]) {
+            target = Point(next.x, next.y - 50);
+            state = CharacterState::BACK;
+            is_moving = true; 
+        } else if (DC->key_state[ALLEGRO_KEY_A]) {
+            target = Point(next.x - 50, next.y);
+            state = CharacterState::LEFT;
+            is_moving = true; 
+        } else if (DC->key_state[ALLEGRO_KEY_S]) {
+            target = Point(next.x, next.y + 50);
+            state = CharacterState::FRONT;
+            is_moving = true;
+        } else if (DC->key_state[ALLEGRO_KEY_D]) {
+            target = Point(next.x + 50, next.y);
+            state = CharacterState::RIGHT;
+            is_moving = true; 
+        } else if (DC->key_state[ALLEGRO_KEY_X]) {
+            Character::delete_wall(state);
+        } else if (DC->key_state[ALLEGRO_KEY_SPACE]) {
+            Character::attack(state);
+        }
     }
-    else if (DC->key_state[ALLEGRO_KEY_A])
-    {
-        next.x -= speed;
-        //shape->update_center_x(shape->center_x() - speed);
-        state = CharacterState::LEFT;
-    }
-    else if (DC->key_state[ALLEGRO_KEY_S])
-    {
-        next.y += speed;
-        //shape->update_center_y(shape->center_y() + speed);
-        state = CharacterState::FRONT;
-    }
-    else if (DC->key_state[ALLEGRO_KEY_D])
-    {
-        next.x += speed;
-        //shape->update_center_x(shape->center_x() + speed);
-        state = CharacterState::RIGHT;
-    }
-    else if (DC->key_state[ALLEGRO_KEY_X])
-    {
-        Character::delete_wall(state);
-    }
-    else if (DC->key_state[ALLEGRO_KEY_SPACE])
-    {
-        Character::attack(state);
-    }
-    if(!Character::ch_interact(next)){
-        shape->update_center_x(next.x);
-        shape->update_center_y(next.y);
+
+    if (is_moving) {
+        double dx = 0, dy = 0;
+        if (next.x < target.x) dx = std::min(speed, target.x - next.x);
+        if (next.x > target.x) dx = std::max(-speed, target.x - next.x);
+        if (next.y < target.y) dy = std::min(speed, target.y - next.y);
+        if (next.y > target.y) dy = std::max(-speed, target.y - next.y);
+
+        Point potential_next(next.x + dx, next.y + dy);
+
+        if (!Character::ch_interact(potential_next)) {
+            next.x += dx;
+            next.y += dy;
+            shape->update_center_x(next.x);
+            shape->update_center_y(next.y);
+        } else {
+            is_moving = false;
+        }
+
+        if (std::abs(next.x - target.x) < 1e-3 && std::abs(next.y - target.y) < 1e-3) {
+            next.x = target.x;
+            next.y = target.y;
+            is_moving = false; 
+        }
     }
 }
+
+
 
 bool Character::ch_interact(const Point &next){
     DataCenter *DC = DataCenter::get_instance();
@@ -158,15 +273,15 @@ void Character::delete_wall(CharacterState state)
     DataCenter* DC = DataCenter::get_instance();
     Point next;
     if (state == CharacterState::FRONT) {
-        next = Point(shape->center_x(), shape->center_y() + height);
+        next = Point(shape->center_x(), shape->center_y() + 43);
     } 
     else if (state == CharacterState::BACK) {
-        next = Point(shape->center_x(), shape->center_y() - 50);
+        next = Point(shape->center_x(), shape->center_y() - 43);
     }
     else if (state == CharacterState::LEFT) {
-        next = Point(shape->center_x() - 50, shape->center_y());
+        next = Point(shape->center_x() - 43, shape->center_y());
     } else if (state == CharacterState::RIGHT) {
-        next = Point(shape->center_x() + width, shape->center_y());
+        next = Point(shape->center_x() + 43, shape->center_y());
     } else {
         return;
     }
