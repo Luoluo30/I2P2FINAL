@@ -26,6 +26,7 @@ private:
 	OperationCenter() {}
 private:
 	void _update_wall();
+	void _update_wall2();
 	void _update_monster();
 	void _update_tower();
 	void _update_towerBullet();
@@ -34,6 +35,7 @@ private:
 	void _update_fruit_character();
 private:
 	void _draw_wall();
+	void _draw_wall2();
 	void _draw_monster();
 	void _draw_tower();
 	void _draw_towerBullet();

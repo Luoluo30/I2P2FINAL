@@ -11,7 +11,8 @@ public:
     Wall(const Point &p, const std::string &path);
 	void update();
     void draw();
-    Shape *hitbox;   
+    Shape *hitbox;
+    void destroy();
 
 private:
     ALLEGRO_BITMAP *bitmap;

@@ -7,12 +7,16 @@
 #include "../Character.h"
 #include "../Fruit.h"
 #include "../Wall.h"
+#include "../Wall2.h"
 #include <iostream>
 using namespace std;
 void OperationCenter::update() {
 	// Update walls.
 	_update_wall();
 	cout<<"_update_wall();"<<endl;
+	// Update walls.
+	_update_wall2();
+	cout<<"_update_wall2();"<<endl;
 	// Update monsters.
 	_update_monster();
 	cout<<"_update_monster();"<<endl;
@@ -36,6 +40,12 @@ void OperationCenter::_update_wall() {
 	std::vector<Wall*> &walls = DataCenter::get_instance()->walls;
 	for(Wall *wall : walls)
 		wall->update();
+}
+
+void OperationCenter::_update_wall2() {
+	std::vector<Wall2*> &walls2 = DataCenter::get_instance()->walls2;
+	for(Wall2 *wall2 : walls2)
+		wall2->update();
 }
 
 void OperationCenter::_update_monster() {
@@ -126,6 +136,7 @@ void OperationCenter::_update_fruit_character() {
 
 void OperationCenter::draw() {
 	_draw_wall();
+	_draw_wall2();
 	_draw_monster();
 	_draw_tower();
 	_draw_towerBullet();
@@ -135,6 +146,12 @@ void OperationCenter::_draw_wall() {
 	std::vector<Wall*> &walls = DataCenter::get_instance()->walls;
 	for(Wall *wall : walls)
 		wall->draw();
+}
+
+void OperationCenter::_draw_wall2() {
+	std::vector<Wall2*> &walls2 = DataCenter::get_instance()->walls2;
+	for(Wall2 *wall2 : walls2)
+		wall2->draw();
 }
 
 void OperationCenter::_draw_monster() {

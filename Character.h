@@ -4,6 +4,7 @@
 #include <map>
 #include "Object.h"
 #include "Wall.h"
+#include "Wall2.h"
 
 enum class CharacterState
 {
@@ -25,6 +26,8 @@ public:
     bool ch_interact(const Point &next);
     bool wall_interact(const Point &next);
     void attack(CharacterState state);
+    void delete_wall(CharacterState state);
+    Point legal_position(Point p);
 
 private:
     CharacterState state = CharacterState::FRONT; // the state of character

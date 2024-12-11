@@ -5,6 +5,7 @@
 #include "../Player.h"
 #include "../Fruit.h"
 #include "../Wall.h"
+#include "../Wall2.h"
 #include "../monsters/Monster.h"
 #include "../towers/Tower.h"
 #include "../towers/Bullet.h"
@@ -12,9 +13,9 @@
 // fixed settings
 namespace DataSetting {
 	constexpr double FPS = 60;
-	constexpr int window_width = 800;
-	constexpr int window_height = 600;
-	constexpr int game_field_length = 600;
+	constexpr int window_width = 1000;
+	constexpr int window_height = 800;
+	constexpr int game_field_length = 800;
 }
 
 DataCenter::DataCenter() {
@@ -39,6 +40,9 @@ DataCenter::~DataCenter() {
 	delete player;
 	delete level;
 	for(Wall *&w : walls){
+		delete w;
+	}
+	for(Wall2 *&w : walls2){
 		delete w;
 	}
 	for(Monster *&m : monsters) {
