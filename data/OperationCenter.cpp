@@ -7,11 +7,18 @@
 #include "../Player.h"
 #include "../Character.h"
 #include "../Fruit.h"
+#include "../Banana.h"
 #include "../Wall.h"
 #include "../Wall2.h"
 #include <iostream>
 using namespace std;
 void OperationCenter::update() {
+	// Update bananas.
+	_update_banana();
+	cout<<"_update_banana();"<<endl;
+	// Update fruits.
+	_update_fruit();
+	cout<<"_update_fruit();"<<endl;
 	// Update walls.
 	_update_wall();
 	cout<<"_update_wall();"<<endl;
@@ -36,14 +43,20 @@ void OperationCenter::update() {
 	// If any monster reaches the end, hurt the player and delete the monster.
 	_update_monster_player();
 	cout<<"_update_monster_player();"<<endl;
-	_update_enemy_character();
-	cout<<"_update_enemy_character();"<<endl;
-	_update_enemy_wall();
-	cout<<"_update_enemy_wall();"<<endl;
-	_update_enemy_wall2();
-	cout<<"_update_enemy_wall2();"<<endl;
-	_update_fruit_character();
-	cout<<"_update_fruit_character();"<<endl;
+	//_update_fruit_character();
+	//cout<<"_update_fruit_character();"<<endl;
+}
+
+void OperationCenter::_update_banana() {
+	std::vector<Banana*> &bananas = DataCenter::get_instance()->bananas;
+	for(Banana *banana : bananas)
+		banana->update();
+} 
+
+void OperationCenter::_update_fruit() {
+	std::vector<Fruit*> &fruits = DataCenter::get_instance()->fruits;
+	for(Fruit *fruit : fruits)
+		fruit->update();
 }
 
 void OperationCenter::_update_wall() {
@@ -106,20 +119,7 @@ void OperationCenter::_update_monster_towerBullet() {
 	}
 }
 
-void OperationCenter::_update_enemy_character() {
-	DataCenter *DC = DataCenter::get_instance();
-	
-}
 
-void OperationCenter::_update_enemy_wall() {
-	DataCenter *DC = DataCenter::get_instance();
-	
-}
-
-void OperationCenter::_update_enemy_wall2() {
-	DataCenter *DC = DataCenter::get_instance();
-	
-}
 
 void OperationCenter::_update_monster_player() {
 	DataCenter *DC = DataCenter::get_instance();
@@ -143,35 +143,28 @@ void OperationCenter::_update_monster_player() {
 		}
 	}
 }
-void OperationCenter::_update_fruit_character() {
-    DataCenter *DC = DataCenter::get_instance();
-    Player *&player = DC->player;
-    std::unique_ptr<Fruit>& fruit = DC->fruit; // No need for a reference to raw pointer
-	cout<<"before if"<<endl;
-	if (!fruit) {
-    cout << "Fruit is nullptr, skipping update." << endl;
-    return;
-	}
-    if (fruit->shape->overlap(*(DC->character->shape))) {
-		cout<<"overlap"<<endl;
-        player->coin += 50;
-		player->fruit+= 1;
-		cout<<"player->coin += 50;"<<endl;
-		std::cout << "Fruit deleted!" << std::endl;
-
-		fruit = nullptr; // 防止后续对已删除对象的访问
-		std::cout << "fruit = nullptr;" << std::endl;
-		cout<<"overlap finished"<<endl;
-    }
-}
 
 void OperationCenter::draw() {
+	_draw_banana();
+	_draw_fruit();
 	_draw_wall();
 	_draw_wall2();
 	_draw_monster();
 	_draw_enemy();
 	_draw_tower();
 	_draw_towerBullet();
+}
+
+void OperationCenter::_draw_banana() {
+	std::vector<Banana*> &bananas = DataCenter::get_instance()->bananas;
+	for(Banana *banana : bananas)
+		banana->draw();
+}
+
+void OperationCenter::_draw_fruit() {
+	std::vector<Fruit*> &fruits = DataCenter::get_instance()->fruits;
+	for(Fruit *fruit : fruits)
+		fruit->draw();
 }
 
 void OperationCenter::_draw_wall() {

@@ -25,19 +25,20 @@ public:
 private:
 	OperationCenter() {}
 private:
+	void _update_banana();
+	void _update_fruit();
 	void _update_wall();
 	void _update_wall2();
 	void _update_monster();
 	void _update_enemy();
 	void _update_tower();
 	void _update_towerBullet();
-	void _update_enemy_character();
-	void _update_enemy_wall();
-	void _update_enemy_wall2();
 	void _update_monster_towerBullet();
 	void _update_monster_player();
-	void _update_fruit_character();
+	//void _update_fruit_character();
 private:
+	void _draw_banana();
+	void _draw_fruit();
 	void _draw_wall();
 	void _draw_wall2();
 	void _draw_monster();

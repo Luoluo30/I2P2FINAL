@@ -5,6 +5,9 @@
 #include "Object.h"
 #include "Wall.h"
 #include "Wall2.h"
+#include "Fruit.h"
+#include "Banana.h"
+#include "Player.h"
 
 enum class CharacterState
 {

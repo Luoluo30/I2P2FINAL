@@ -10,6 +10,9 @@
 #include <array>
 #include "Wall2.h"
 #include "Wall.h"
+#include "Fruit.h"
+#include "Banana.h"
+#include "Player.h"
 
 using namespace std;
 
@@ -70,6 +73,11 @@ Level::load_level(int lvl) {
 		road_path.emplace_back(w, h);
 	}
 
+	
+	// fruit
+	std::vector<Point> fruit_positions = {
+		Point(75, 75), Point(725, 75), Point(75, 725), Point(725, 725),
+	};
 	// wall
 	std::vector<Point> wall_positions = {
         Point(175, 75), Point(175, 125), Point(175, 175), Point(125, 175), Point(75, 175),
@@ -110,6 +118,13 @@ Level::load_level(int lvl) {
 		DC->enemies.emplace_back(Enemy::create_enemy(EnemyType::GHOST, pos));
 	}
 
+	
+
+	for (const Point &pos : fruit_positions) {
+		Fruit *fruit = new Fruit(pos);
+        DC->fruits.push_back(fruit);
+    }
+
 	for (const Point &pos : wall_positions) {
         Wall *wall = new Wall(pos, "./assets/image/Wall.jpg");
         DC->walls.push_back(wall);
@@ -131,6 +146,20 @@ Level::load_level(int lvl) {
 */
 void
 Level::update() {
+	DataCenter *DC = DataCenter::get_instance();
+	static bool banana_flag = false;
+	// banana
+	std::vector<Point> banana_positions = {
+		Point(75, 425), Point(375, 75), Point(425, 725), Point(725, 375),
+	};
+	if(DC->player->fruit >= 4 && banana_flag == false){
+		for (const Point &pos : banana_positions) {
+			Banana *banana = new Banana(pos);
+        	DC->bananas.push_back(banana);
+		}
+		banana_flag = true;
+    }
+
 	if(monster_spawn_counter) {
 		monster_spawn_counter--;
 		return;

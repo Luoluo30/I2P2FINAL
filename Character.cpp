@@ -32,8 +32,8 @@ void Character::init()
     //DataCenter *DC = DataCenter::get_instance();
     //GIFCenter *GIFC = GIFCenter::get_instance();
     //ALGIF_ANIMATION *gif = GIFC->get(gifPath[state]);
-    width = 43;
-    height = 43;
+    width = 42;
+    height = 42;
     shape.reset(new Rectangle{400,
                               400,
                               400 + width,
@@ -93,11 +93,29 @@ void Character::update()
         if (std::abs(next.x - target.x) < 1e-3 && std::abs(next.y - target.y) < 1e-3) {
             next.x = target.x;
             next.y = target.y;
-            is_moving = false; 
+            is_moving = false;
+            
+        }
+    }
+    for (auto it = DC->fruits.begin(); it != DC->fruits.end(); ) {
+        if ((*it)->hitbox->overlap(next)) {
+            it = DC->fruits.erase(it);
+            DC->player->fruit++;
+            break;
+        } else {
+            ++it;
+        }
+    }
+    for (auto it = DC->bananas.begin(); it != DC->bananas.end(); ) {
+        if ((*it)->hitbox->overlap(next)) {
+            it = DC->bananas.erase(it);
+            DC->player->banana++;
+            break;
+        } else {
+            ++it;
         }
     }
 }
-
 
 
 bool Character::ch_interact(const Point &next){
@@ -187,6 +205,7 @@ bool Character::wall_interact(const Point &next){
     }
     return false; 
 }
+
 
 bool Character::wall2_interact(const Point &next){
     DataCenter *DC = DataCenter::get_instance();

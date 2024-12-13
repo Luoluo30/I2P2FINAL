@@ -9,8 +9,8 @@
 Wall::Wall(const Point &p, const std::string &path) {
     ImageCenter *IC = ImageCenter::get_instance();
     bitmap = IC->get(path);
-    width = 48;
-    height = 48;
+    width = 43;
+    height = 43;
     shape.reset(new Rectangle{p.x - width / 2, p.y - height / 2, p.x + width / 2, p.y + height / 2});
     hitbox = new Rectangle{p.x - width / 2, p.y - height / 2, p.x + width / 2, p.y + height / 2};
 }

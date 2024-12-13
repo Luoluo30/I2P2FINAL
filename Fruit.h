@@ -7,10 +7,7 @@
 
 enum class FruitState
 {
-    LEFT,
-    RIGHT,
-    FRONT,
-    BACK,
+    APPLE,
     CHARACTERSTATE_MAX
 };
 
@@ -18,15 +15,15 @@ class Fruit : public Object
 {
 
 public:
-    void init();
+    Fruit(const Point &p);
     void update();
     void draw();
-    
+    void destroy();
+    Shape *hitbox; 
 
 private:
-    FruitState state = FruitState::FRONT; 
-    int width, height;                 
-    std::map<FruitState, std::string> gifPath;
+    int width, height;
+    ALLEGRO_BITMAP *bitmap;                 
     
 };
 #endif

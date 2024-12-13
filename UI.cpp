@@ -129,6 +129,7 @@ void
 UI::draw() {
 	DataCenter *DC = DataCenter::get_instance();
 	FontCenter *FC = FontCenter::get_instance();
+	ImageCenter *IC = ImageCenter::get_instance();
 	const Point &mouse = DC->mouse;
 	// draw HP
 	const int &game_field_length = DC->game_field_length;
@@ -140,39 +141,59 @@ UI::draw() {
 	
 	// draw coin
 	// 取得玩家的金幣數量
-	const int &player_coin = DC->player->coin;
+	//const int &player_coin = DC->player->coin;
 
 	// 使用指定字體和顏色繪製 "coin: " 字串並顯示玩家的金幣數量
-	al_draw_textf(
-    FC->courier_new[FontSize::MEDIUM], // 使用中等大小的字體 (courier_new)
-    al_map_rgb(0, 0, 0),// 字體顏色設為黑色
-    game_field_length + love_img_padding,  // 顯示位置的 X 座標：在遊戲區域的長度後加上額外的邊距 (love_img_padding)
-    love_img_padding,// 顯示位置的 Y 座標：在頂部加上邊距 (love_img_padding)
-    ALLEGRO_ALIGN_LEFT, // 文字對齊方式：左對齊
-    "coin: %5d", player_coin// 顯示文字："coin: " 以及玩家的金幣數量
-	);
+	// al_draw_textf(
+    // FC->courier_new[FontSize::MEDIUM], // 使用中等大小的字體 (courier_new)
+    // al_map_rgb(0, 0, 0),// 字體顏色設為黑色
+    // game_field_length + love_img_padding,  // 顯示位置的 X 座標：在遊戲區域的長度後加上額外的邊距 (love_img_padding)
+    // love_img_padding,// 顯示位置的 Y 座標：在頂部加上邊距 (love_img_padding)
+    // ALLEGRO_ALIGN_LEFT, // 文字對齊方式：左對齊
+    // "coin: %5d", player_coin// 顯示文字："coin: " 以及玩家的金幣數量
+	// );
 
 
-	// draw fruit
-	const int &player_fruit = DC->player->fruit;
+	// draw banana
+	const int &player_banana = DC->player->banana;
+	ALLEGRO_BITMAP *b = IC->get("./assets/image/Fruit/banana.png");
+	al_draw_bitmap(
+        b,
+        805,
+        600,
+        0 
+    );
 	al_draw_textf(
 		FC->courier_new[FontSize::MEDIUM], al_map_rgb(0,0, 20),
-		game_field_length+love_img_padding, 550,
-		ALLEGRO_ALIGN_LEFT, "Fruit: %5d", player_fruit);
+		game_field_length+love_img_padding + 50, 605,
+		ALLEGRO_ALIGN_LEFT, ": %d / 4", player_banana);
+	// draw fruit
+	const int &player_fruit = DC->player->fruit;
+	ALLEGRO_BITMAP *f = IC->get("./assets/image/Fruit/fruit.png");
+	al_draw_bitmap(
+        f,
+        805,
+        535,
+        0 
+    );
+	al_draw_textf(
+		FC->courier_new[FontSize::MEDIUM], al_map_rgb(0,0, 20),
+		game_field_length+love_img_padding + 50, 550,
+		ALLEGRO_ALIGN_LEFT, ": %d / 4", player_fruit);
 	// draw tower shop items
-	for(auto &[bitmap, p, price] : tower_items) {
-		int w = al_get_bitmap_width(bitmap);
-		int h = al_get_bitmap_height(bitmap);
-		al_draw_bitmap(bitmap, p.x, p.y, 0);
-		al_draw_rectangle(
-			p.x - 1, p.y - 1,
-			p.x + w + 1, p.y + h + 1,
-			al_map_rgb(0, 0, 0), 1);
-		al_draw_textf(
-			FC->courier_new[FontSize::MEDIUM], al_map_rgb(0, 0, 0),
-			p.x + w / 2, p.y + h,
-			ALLEGRO_ALIGN_CENTRE, "%d", price);
-	}
+	// for(auto &[bitmap, p, price] : tower_items) {
+	// 	int w = al_get_bitmap_width(bitmap);
+	// 	int h = al_get_bitmap_height(bitmap);
+	// 	al_draw_bitmap(bitmap, p.x, p.y, 0);
+	// 	al_draw_rectangle(
+	// 		p.x - 1, p.y - 1,
+	// 		p.x + w + 1, p.y + h + 1,
+	// 		al_map_rgb(0, 0, 0), 1);
+	// 	al_draw_textf(
+	// 		FC->courier_new[FontSize::MEDIUM], al_map_rgb(0, 0, 0),
+	// 		p.x + w / 2, p.y + h,
+	// 		ALLEGRO_ALIGN_CENTRE, "%d", price);
+	// }
 
 	switch(state) {
 		static Tower *selected_tower = nullptr;

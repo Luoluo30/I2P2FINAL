@@ -3,6 +3,8 @@
 #include "../data/DataCenter.h"
 #include "../data/ImageCenter.h"
 #include "../Level.h"
+#include "../Player.h"
+#include "../Character.h"
 #include "../shapes/Point.h"
 #include "../shapes/Rectangle.h"
 #include "../Wall.h"
@@ -55,6 +57,15 @@ void Enemy::update() {
     Point current_position = {shape->center_x(), shape->center_y()};
     Point next_position = current_position;
 
+    if (DC->character->shape->overlap(Rectangle{
+        next_position.x - 21.5,
+        next_position.y - 21.5,
+        next_position.x + 21.5,
+        next_position.y + 21.5
+    })) {
+        DC->player->HP--; 
+    }
+
     if (rand() % 100 < 1) { 
         change_direction();
     }
@@ -97,6 +108,7 @@ void Enemy::update() {
     }
     shape->update_center_x(next_position.x);
     shape->update_center_y(next_position.y);
+ 
 }
 
 

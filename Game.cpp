@@ -8,7 +8,6 @@
 #include "Player.h"
 #include "Level.h"
 #include "Character.h"
-#include "Fruit.h"
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
@@ -139,10 +138,6 @@ void Game::game_init() {
     DC->level->init();
     DC->character->init();
 	
-	std::cout << "init fruit..." << std::endl;
-	DC->fruit = std::make_unique<Fruit>();
-	DC->fruit->init();
-	std::cout << "fruit init" << std::endl;
 
     // 游戏开始界面设置
     background = IC->get(background_img_path);
@@ -267,25 +262,18 @@ void Game::game_draw() {
             al_draw_filled_rectangle(
                 DC->game_field_length, 0,
                 DC->window_width, DC->window_height,
-                al_map_rgb(100, 100, 100));
+                al_map_rgb(100, 149, 237));
         if(DC->game_field_length < DC->window_height)
             al_draw_filled_rectangle(
                 0, DC->game_field_length,
                 DC->window_width, DC->window_height,
-                al_map_rgb(100, 100, 100));
+                al_map_rgb(100, 149, 237));
 
         // 用户界面
         if(state != STATE::START) {
             DC->level->draw();
             DC->character->draw();
 			cout<<"A"<<endl;
-            if(DC->fruit){
-				DC->fruit->draw();  // 如果水果存在才绘制
-				//cout<<"draw fruit"<<endl;
-			}
-            else if (DC->fruit == nullptr) {
-    			std::cout << "Fruit is nullptr!" << std::endl;
-			}
 			cout<<"B"<<endl;
 
             ui->draw();

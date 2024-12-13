@@ -16,6 +16,7 @@ class Tower;
 class Bullet;
 class Character;
 class Fruit;
+class Banana;
 class Wall;
 class Wall2;
 /**
@@ -88,7 +89,8 @@ public:
 	 */
 	Character *character;
 	
-	std::unique_ptr<Fruit> fruit;
+	std::vector<Banana*> bananas;
+	std::vector<Fruit*> fruits;
 	std::vector<Wall*> walls;
 	std::vector<Wall2*> walls2;
 	std::vector<Monster*> monsters;

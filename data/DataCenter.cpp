@@ -4,6 +4,7 @@
 #include "../Character.h"
 #include "../Player.h"
 #include "../Fruit.h"
+#include "../Banana.h"
 #include "../Wall.h"
 #include "../Wall2.h"
 #include "../monsters/Monster.h"
@@ -32,8 +33,6 @@ DataCenter::DataCenter() {
 	player = new Player();
 	level = new Level();
 	character = new Character();
-	fruit = std::make_unique<Fruit>();
-	
 	
 }
 
@@ -56,6 +55,12 @@ DataCenter::~DataCenter() {
 		delete t;
 	}
 	for(Bullet *&b : towerBullets) {
+		delete b;
+	}
+	for(Fruit *&f : fruits){
+		delete f;
+	}
+	for(Banana *&b : bananas){
 		delete b;
 	}
 }
