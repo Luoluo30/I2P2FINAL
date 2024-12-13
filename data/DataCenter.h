@@ -11,6 +11,7 @@
 class Player;
 class Level;
 class Monster;
+class Enemy;
 class Tower;
 class Bullet;
 class Character;
@@ -91,6 +92,7 @@ public:
 	std::vector<Wall*> walls;
 	std::vector<Wall2*> walls2;
 	std::vector<Monster*> monsters;
+	std::vector<Enemy*> enemies;
 	/**
 	 * @brief Raw list of Tower objects.
 	 * @see Tower

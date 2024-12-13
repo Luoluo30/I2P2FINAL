@@ -25,6 +25,7 @@ public:
     void draw();
     bool ch_interact(const Point &next);
     bool wall_interact(const Point &next);
+    bool wall2_interact(const Point &next);
     void attack(CharacterState state);
     void delete_wall(CharacterState state);
     Point legal_position(Point p);

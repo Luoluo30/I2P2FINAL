@@ -1,6 +1,7 @@
 #include "OperationCenter.h"
 #include "DataCenter.h"
 #include "../monsters/Monster.h"
+#include "../enemies/Enemy.h"
 #include "../towers/Tower.h"
 #include "../towers/Bullet.h"
 #include "../Player.h"
@@ -19,7 +20,10 @@ void OperationCenter::update() {
 	cout<<"_update_wall2();"<<endl;
 	// Update monsters.
 	_update_monster();
-	cout<<"_update_monster();"<<endl;
+	cout<<"_update_enemy();"<<endl;
+	// Update enemies.
+	_update_enemy();
+	cout<<"_update_enemy();"<<endl;
 	// Update towers.
 	_update_tower();
 	cout<<"_update_tower();"<<endl;
@@ -32,6 +36,12 @@ void OperationCenter::update() {
 	// If any monster reaches the end, hurt the player and delete the monster.
 	_update_monster_player();
 	cout<<"_update_monster_player();"<<endl;
+	_update_enemy_character();
+	cout<<"_update_enemy_character();"<<endl;
+	_update_enemy_wall();
+	cout<<"_update_enemy_wall();"<<endl;
+	_update_enemy_wall2();
+	cout<<"_update_enemy_wall2();"<<endl;
 	_update_fruit_character();
 	cout<<"_update_fruit_character();"<<endl;
 }
@@ -52,6 +62,12 @@ void OperationCenter::_update_monster() {
 	std::vector<Monster*> &monsters = DataCenter::get_instance()->monsters;
 	for(Monster *monster : monsters)
 		monster->update();
+}
+
+void OperationCenter::_update_enemy() {
+	std::vector<Enemy*> &enemies = DataCenter::get_instance()->enemies;
+	for(Enemy *enemy : enemies)
+		enemy->update();
 }
 
 void OperationCenter::_update_tower() {
@@ -88,6 +104,21 @@ void OperationCenter::_update_monster_towerBullet() {
 			}
 		}
 	}
+}
+
+void OperationCenter::_update_enemy_character() {
+	DataCenter *DC = DataCenter::get_instance();
+	
+}
+
+void OperationCenter::_update_enemy_wall() {
+	DataCenter *DC = DataCenter::get_instance();
+	
+}
+
+void OperationCenter::_update_enemy_wall2() {
+	DataCenter *DC = DataCenter::get_instance();
+	
 }
 
 void OperationCenter::_update_monster_player() {
@@ -138,6 +169,7 @@ void OperationCenter::draw() {
 	_draw_wall();
 	_draw_wall2();
 	_draw_monster();
+	_draw_enemy();
 	_draw_tower();
 	_draw_towerBullet();
 }
@@ -160,6 +192,12 @@ void OperationCenter::_draw_monster() {
 		monster->draw();
 }
 
+void OperationCenter::_draw_enemy() {
+	std::vector<Enemy*> &enemies = DataCenter::get_instance()->enemies;
+	for(Enemy *enemy : enemies)
+		enemy->draw();
+}
+
 void OperationCenter::_draw_tower() {
 	std::vector<Tower*> &towers = DataCenter::get_instance()->towers;
 	for(Tower *tower : towers)
@@ -171,3 +209,4 @@ void OperationCenter::_draw_towerBullet() {
 	for(Bullet *towerBullet : towerBullets)
 		towerBullet->draw();
 }
+

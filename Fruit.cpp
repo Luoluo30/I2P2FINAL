@@ -46,7 +46,7 @@ void Fruit::init() {
 
 void Fruit::draw() {
     // 获取 DataCenter 实例和当前形状中心点
-    DataCenter *DC = DataCenter::get_instance();
+    //DataCenter *DC = DataCenter::get_instance();
     ImageCenter *IC = ImageCenter::get_instance();
 
     // 静态定义水果图像路径

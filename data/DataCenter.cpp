@@ -7,6 +7,7 @@
 #include "../Wall.h"
 #include "../Wall2.h"
 #include "../monsters/Monster.h"
+#include "../enemies/Enemy.h"
 #include "../towers/Tower.h"
 #include "../towers/Bullet.h"
 
@@ -47,6 +48,9 @@ DataCenter::~DataCenter() {
 	}
 	for(Monster *&m : monsters) {
 		delete m;
+	}
+	for(Enemy *&e : enemies) {
+		delete e;
 	}
 	for(Tower *&t : towers) {
 		delete t;

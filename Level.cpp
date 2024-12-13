@@ -2,6 +2,7 @@
 #include <string>
 #include "Utils.h"
 #include "monsters/Monster.h"
+#include "enemies/Enemy.h"
 #include "data/DataCenter.h"
 #include <allegro5/allegro_primitives.h>
 #include "shapes/Point.h"
@@ -71,13 +72,18 @@ Level::load_level(int lvl) {
 
 	// wall
 	std::vector<Point> wall_positions = {
-        Point(125, 175), Point(125, 275), Point(125, 375), Point(125, 475), Point(125, 575), Point(125, 675),
+        Point(175, 75), Point(175, 125), Point(175, 175), Point(125, 175), Point(75, 175),
+		Point(175, 225), Point(175, 275), Point(325, 75), Point(325, 125), Point(325, 175), Point(325, 225), Point(325, 275), Point(325, 325), Point(275, 325), Point(225, 325), Point(175, 325), Point(125, 325), Point(75, 325),Point(325, 475), Point(275, 475), Point(225, 475), Point(175, 475), Point(125, 475), Point(75, 475), Point(175, 525), Point(175, 575), Point(175, 625), Point(175, 675), Point(175, 725), Point(325, 525), Point(325, 575), Point(325, 625), Point(325, 675), Point(325, 725),
 
-		Point(275, 125), Point(275, 225), Point(275, 325), Point(275, 425), Point(275, 525), Point(275, 625), 
+		Point(625, 75), Point(625, 125), Point(625, 175), Point(675, 175), Point(725, 175),
+		Point(625, 225), Point(625, 275), Point(475, 75), Point(475, 125), Point(475, 175),
+		Point(475, 225), Point(475, 275), Point(475, 325), Point(525, 325), Point(575, 325),
+		Point(625, 325), Point(675, 325), Point(725, 325), Point(475, 475), Point(525, 475),
+		Point(575, 475), Point(625, 475), Point(675, 475), Point(725, 475), Point(625, 525),
+		Point(625, 575), Point(625, 625), Point(625, 675), Point(625, 725), Point(475, 525),
+		Point(475, 575), Point(475, 625), Point(475, 675), Point(475, 725),
 
-		Point(675, 175), Point(675, 275), Point(675, 375), Point(675, 475), Point(675, 575), Point(675, 675),
-
-		Point(525, 125), Point(525, 225), Point(525, 325), Point(525, 425), Point(525, 525), Point(525, 625), 
+		Point(75, 625), Point(125, 625), Point(725, 625), Point(675, 625)
 
     };
 
@@ -91,15 +97,18 @@ Level::load_level(int lvl) {
 
 		Point(75, 775), Point(125, 775), Point(175, 775), Point(225, 775), Point(275, 775), Point(325, 775), Point(375, 775), Point(425, 775), Point(475, 775), Point(525, 775), Point(575, 775), Point(625, 775), Point(675, 775), Point(725, 775),
 
-		Point(125, 125), Point(125, 225), Point(125, 325), Point(125, 425), Point(125, 525), Point(125, 625),  
-
-		Point(675, 125), Point(675, 225), Point(675, 325), Point(675, 425), Point(675, 525), Point(675, 625), 
-
-		Point(525, 175), Point(525, 275), Point(525, 375), Point(525, 475), Point(525, 575), Point(525, 675),
-
-		Point(275, 175), Point(275, 275), Point(275, 375), Point(275, 475), Point(275, 575), Point(275, 675),
+		
+		
 
     };
+
+    std::vector<Point> enemyghost_positions = {
+		Point(75, 225), Point(225, 575), Point(675, 575), Point(525, 75)
+	};
+
+	for(const Point &pos : enemyghost_positions) {
+		DC->enemies.emplace_back(Enemy::create_enemy(EnemyType::GHOST, pos));
+	}
 
 	for (const Point &pos : wall_positions) {
         Wall *wall = new Wall(pos, "./assets/image/Wall.jpg");
@@ -111,6 +120,7 @@ Level::load_level(int lvl) {
         DC->walls2.push_back(wall2);
     }
 
+	
 	debug_log("<Level> load level %d.\n", lvl);
 
 	
@@ -139,13 +149,13 @@ Level::update() {
 void
 Level::draw() {
 	if(level == -1) return;
-	for(auto &[i, j] : road_path) {
-		int x1 = i * LevelSetting::grid_size[level];
-		int y1 = j * LevelSetting::grid_size[level];
-		int x2 = x1 + LevelSetting::grid_size[level];
-		int y2 = y1 + LevelSetting::grid_size[level];
-		//al_draw_filled_rectangle(x1, y1, x2, y2, al_map_rgb(255, 244, 173));
-	}
+	// for(auto &[i, j] : road_path) {
+	// 	//int x1 = i * LevelSetting::grid_size[level];
+	// 	//int y1 = j * LevelSetting::grid_size[level];
+	// 	//int x2 = x1 + LevelSetting::grid_size[level];
+	// 	//int y2 = y1 + LevelSetting::grid_size[level];
+	// 	//al_draw_filled_rectangle(x1, y1, x2, y2, al_map_rgb(255, 244, 173));
+	// }
 }
 
 bool
