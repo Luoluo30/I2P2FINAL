@@ -38,6 +38,8 @@ void Character::init()
                               400,
                               400 + width,
                               400 + height});
+    invincible = false;
+    invincible_timer = 20;
 }
 
 void Character::update()
@@ -113,6 +115,21 @@ void Character::update()
             break;
         } else {
             ++it;
+        }
+    }
+    for (auto it = DC->watermelons.begin(); it != DC->watermelons.end(); ) {
+        if ((*it)->hitbox->overlap(next)) {
+            it = DC->watermelons.erase(it);
+            DC->player->watermelon++;
+            break;
+        } else {
+            ++it;
+        }
+    }
+    if (invincible) {
+        invincible_timer -= (double)1.0 / 60;
+        if (invincible_timer <= 0.0) {
+            invincible = false;  
         }
     }
 }

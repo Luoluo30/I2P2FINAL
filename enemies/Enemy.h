@@ -11,7 +11,7 @@ enum class Dir;
 
 // fixed settings
 enum class EnemyType {
-	GHOST, ENEMYTYPE_MAX
+	GHOST, NEZUKO, ENEMYTYPE_MAX
 };
 
 class Enemy : public Object
@@ -26,7 +26,7 @@ public:
 	void fix_position(Point &current_position);
 protected:
 	int speed;
-	const char *path;
+	const char* path;
 private:
 	EnemyType type;
 	Dir dir;

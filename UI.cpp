@@ -13,8 +13,8 @@
 #include "Level.h"
 
 // fixed settings
-constexpr char love_img_path[] = "./assets/image/love.png";
-constexpr int love_img_padding = 5;
+// constexpr char love_img_path[] = "./assets/image/love.png";
+// constexpr int love_img_padding = 5;
 constexpr int tower_img_left_padding = 30;
 constexpr int tower_img_top_padding = 30;
 
@@ -22,7 +22,7 @@ void
 UI::init() {
 	DataCenter *DC = DataCenter::get_instance();
 	ImageCenter *IC = ImageCenter::get_instance();
-	love = IC->get(love_img_path);
+	//love = IC->get(love_img_path);
 	int tl_x = DC->game_field_length + tower_img_left_padding;
 	int tl_y = tower_img_top_padding;
 	int max_height = 0;
@@ -134,10 +134,10 @@ UI::draw() {
 	// draw HP
 	const int &game_field_length = DC->game_field_length;
 	const int &player_HP = DC->player->HP;
-	int love_width = al_get_bitmap_width(love);
-	for(int i = 1; i <= player_HP; ++i) {
-		al_draw_bitmap(love, game_field_length - (love_width + love_img_padding) * i, love_img_padding, 0);
-	}
+	//int love_width = al_get_bitmap_width(love);
+	// for(int i = 1; i <= player_HP; ++i) {
+	// 	al_draw_bitmap(love, game_field_length - (love_width + love_img_padding) * i, love_img_padding, 0);
+	// }
 	
 	// draw coin
 	// 取得玩家的金幣數量
@@ -153,7 +153,19 @@ UI::draw() {
     // "coin: %5d", player_coin// 顯示文字："coin: " 以及玩家的金幣數量
 	// );
 
-
+	// draw watermelons
+	const int &player_watermelon = DC->player->watermelon;
+	ALLEGRO_BITMAP *w = IC->get("./assets/image/Fruit/watermelon.png");
+	al_draw_bitmap(
+        w,
+        805,
+        655,
+        0 
+    );
+	al_draw_textf(
+		FC->courier_new[FontSize::MEDIUM], al_map_rgb(0,0, 20),
+		game_field_length + 50, 660,
+		ALLEGRO_ALIGN_LEFT, ": %d / 40", player_watermelon);
 	// draw banana
 	const int &player_banana = DC->player->banana;
 	ALLEGRO_BITMAP *b = IC->get("./assets/image/Fruit/banana.png");
@@ -165,7 +177,7 @@ UI::draw() {
     );
 	al_draw_textf(
 		FC->courier_new[FontSize::MEDIUM], al_map_rgb(0,0, 20),
-		game_field_length+love_img_padding + 50, 605,
+		game_field_length + 50, 605,
 		ALLEGRO_ALIGN_LEFT, ": %d / 4", player_banana);
 	// draw fruit
 	const int &player_fruit = DC->player->fruit;
@@ -178,8 +190,24 @@ UI::draw() {
     );
 	al_draw_textf(
 		FC->courier_new[FontSize::MEDIUM], al_map_rgb(0,0, 20),
-		game_field_length+love_img_padding + 50, 550,
+		game_field_length + 50, 550,
 		ALLEGRO_ALIGN_LEFT, ": %d / 4", player_fruit);
+
+    al_draw_textf(
+        FC->caviar_dreams[FontSize::MEDIUM], 
+        al_map_rgb(255, 255, 255), 
+        825, 50,                 
+        ALLEGRO_ALIGN_LEFT, 
+         "Time : %.0f", DC->level->countdown_timer
+    );
+
+	al_draw_textf(
+        FC->caviar_dreams[FontSize::MEDIUM], 
+        al_map_rgb(255, 255, 255), 
+        825, 100,                 
+        ALLEGRO_ALIGN_LEFT, 
+         "HP : %d", DC->player->HP
+    );
 	// draw tower shop items
 	// for(auto &[bitmap, p, price] : tower_items) {
 	// 	int w = al_get_bitmap_width(bitmap);

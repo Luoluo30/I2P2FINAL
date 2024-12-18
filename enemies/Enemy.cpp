@@ -1,5 +1,6 @@
 #include "Enemy.h"
 #include "EnemyGhost.h"
+#include "EnemyNezuko.h"
 #include "../data/DataCenter.h"
 #include "../data/ImageCenter.h"
 #include "../Level.h"
@@ -23,6 +24,9 @@ Enemy *Enemy::create_enemy(EnemyType type, Point p) {
 	switch(type) {
 		case EnemyType::GHOST: {
 			return new EnemyGhost{p};
+		}
+        case EnemyType::NEZUKO: {
+			return new EnemyNezuko{p};
 		}
 		case EnemyType::ENEMYTYPE_MAX: {}
 	}
@@ -57,13 +61,15 @@ void Enemy::update() {
     Point current_position = {shape->center_x(), shape->center_y()};
     Point next_position = current_position;
 
-    if (DC->character->shape->overlap(Rectangle{
-        next_position.x - 21.5,
-        next_position.y - 21.5,
-        next_position.x + 21.5,
-        next_position.y + 21.5
-    })) {
-        DC->player->HP--; 
+    if (DC->character->invincible == false) {
+        if (DC->character->shape->overlap(Rectangle{
+            next_position.x - 21.5,
+            next_position.y - 21.5,
+            next_position.x + 21.5,
+            next_position.y + 21.5
+        })) {
+            DC->player->HP--; 
+        }
     }
 
     if (rand() % 100 < 1) { 
@@ -80,31 +86,50 @@ void Enemy::update() {
         next_position.x += speed;
     }
 
-    Rectangle next_hitbox{
-        next_position.x - 21.5,
-        next_position.y - 21.5,
-        next_position.x + 21.5,
-        next_position.y + 21.5
-    };
+    if(type == EnemyType::GHOST){
+        Rectangle next_hitbox{
+            next_position.x - 21.5,
+            next_position.y - 21.5,
+            next_position.x + 21.5,
+            next_position.y + 21.5
+        };
+        bool will_collide = false;
+        for (const auto &wall : DC->walls) {
+            if (wall->hitbox->overlap(next_hitbox)) {
+                will_collide = true;
+                break;
+            }
+        }
+        for (const auto &wall2 : DC->walls2) {
+            if (wall2->hitbox->overlap(next_hitbox)) {
+                will_collide = true;
+                break;
+            }
+        }
 
-    bool will_collide = false;
-    for (const auto &wall : DC->walls) {
-        if (wall->hitbox->overlap(next_hitbox)) {
-            will_collide = true;
-            break;
+        if (will_collide) {
+            fix_position(current_position); 
+            change_direction();
+            return; 
         }
     }
-    for (const auto &wall2 : DC->walls2) {
-        if (wall2->hitbox->overlap(next_hitbox)) {
-            will_collide = true;
-            break;
-        }
-    }
 
-    if (will_collide) {
-        fix_position(current_position); 
-        change_direction();
-        return; 
+    if(type == EnemyType::NEZUKO){
+        if (next_position.x < 50) {
+            next_position.x = 50;
+            change_direction(); 
+        } else if (next_position.x > 750) {
+            next_position.x = 750;
+            change_direction();
+        }
+
+        if (next_position.y < 50) {
+            next_position.y = 50;
+            change_direction();
+        } else if (next_position.y > 750) {
+            next_position.y = 750;
+            change_direction();
+        }
     }
     shape->update_center_x(next_position.x);
     shape->update_center_y(next_position.y);
@@ -115,7 +140,18 @@ void Enemy::update() {
 void
 Enemy::draw() {
 	ImageCenter *IC = ImageCenter::get_instance();
-	ALLEGRO_BITMAP *bitmap = IC->get("./assets/image/enemy/Ghost/UP_0.png");
+    const char* image_path;
+	switch (type) {
+        case EnemyType::GHOST:
+            image_path = "./assets/image/enemy/Ghost/UP_0.png";
+            break;
+        case EnemyType::NEZUKO:
+            image_path = "./assets/image/enemy/Nezuko/UP_0.png";
+            break;
+        case EnemyType::ENEMYTYPE_MAX:{}
+    }
+
+    ALLEGRO_BITMAP *bitmap = IC->get(image_path);
 	al_draw_bitmap(
 		bitmap,
 		shape->center_x() - al_get_bitmap_width(bitmap) / 2,

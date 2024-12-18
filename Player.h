@@ -10,6 +10,7 @@ public:
 	int coin;
 	int fruit = 0;
 	int banana = 0;
+	int watermelon = 0;
 private:
 	int coin_freq;
 	int coin_increase;

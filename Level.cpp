@@ -4,6 +4,7 @@
 #include "monsters/Monster.h"
 #include "enemies/Enemy.h"
 #include "data/DataCenter.h"
+#include "data/SoundCenter.h"
 #include <allegro5/allegro_primitives.h>
 #include "shapes/Point.h"
 #include "shapes/Rectangle.h"
@@ -11,8 +12,11 @@
 #include "Wall2.h"
 #include "Wall.h"
 #include "Fruit.h"
+#include "Rem.h"
 #include "Banana.h"
+#include "Watermelon.h"
 #include "Player.h"
+#include "Character.h"
 
 using namespace std;
 
@@ -114,8 +118,16 @@ Level::load_level(int lvl) {
 		Point(75, 225), Point(225, 575), Point(675, 575), Point(525, 75)
 	};
 
+	std::vector<Point> enemynezuko_positions = {
+		Point(400, 75)
+	};
+
 	for(const Point &pos : enemyghost_positions) {
 		DC->enemies.emplace_back(Enemy::create_enemy(EnemyType::GHOST, pos));
+	}
+
+	for(const Point &pos : enemynezuko_positions) {
+		DC->enemies.emplace_back(Enemy::create_enemy(EnemyType::NEZUKO, pos));
 	}
 
 	
@@ -147,7 +159,25 @@ Level::load_level(int lvl) {
 void
 Level::update() {
 	DataCenter *DC = DataCenter::get_instance();
+	countdown_timer -= (double)1/60;
 	static bool banana_flag = false;
+	static bool watermelon_flag = false;
+	std::vector<Point> watermelon_positions = {
+		Point(225, 75), Point(225, 125), Point(225, 175), Point(225, 225), Point(225, 275), Point(225, 525), Point(225, 575), Point(225, 625), Point(225, 675), Point(225, 725),
+		Point(275, 75), Point(275, 125), Point(275, 175), Point(275, 225), Point(275, 275), Point(275, 525), Point(275, 575), Point(275, 625), Point(275, 675), Point(275, 725),
+		Point(525, 75), Point(525, 125), Point(525, 175), Point(525, 225), Point(525, 275), Point(525, 525), Point(525, 575), Point(525, 625), Point(525, 675), Point(525, 725),
+		Point(575, 75), Point(575, 125), Point(575, 175), Point(575, 225), Point(575, 275), Point(575, 525), Point(575, 575), Point(575, 625), Point(575, 675), Point(575, 725),
+	};
+	if(DC->player->banana >= 4 && watermelon_flag == false){
+		SoundCenter *SC = SoundCenter::get_instance(); 
+    	SC->play("./assets/sound/heaven.mp3", ALLEGRO_PLAYMODE_ONCE);
+		DC->character->invincible = true;
+		watermelon_flag = true;
+		for (const Point &pos : watermelon_positions) {
+			Watermelon *watermelon = new Watermelon(pos);
+        	DC->watermelons.push_back(watermelon);
+		}
+    }
 	// banana
 	std::vector<Point> banana_positions = {
 		Point(75, 425), Point(375, 75), Point(425, 725), Point(725, 375),
@@ -157,7 +187,9 @@ Level::update() {
 			Banana *banana = new Banana(pos);
         	DC->bananas.push_back(banana);
 		}
+		DC->character->speed = 3;
 		banana_flag = true;
+
     }
 
 	if(monster_spawn_counter) {
@@ -173,7 +205,75 @@ Level::update() {
 	// 	break;
 	// }
 	monster_spawn_counter = LevelSetting::monster_spawn_rate;
+	update_wall2_generation();
 }
+
+void Level::update_wall2_generation() {
+    static double last_generation_time = al_get_time();
+    double current_time = al_get_time();
+
+    if (current_time - last_generation_time < 10.0) {
+        return;
+    }
+
+    std::vector<Point> candidate_positions = {
+        Point(225, 25), Point(275, 25), Point(425, 25), Point(525, 25),
+		Point(575, 25), Point(675, 25), Point(725, 25), Point(25, 225), Point(25, 275),
+		Point(25, 375), Point(25, 425), Point(25, 475), Point(25, 525), Point(25, 575),
+		Point(25, 675), Point(25, 725), Point(725, 25), Point(775, 25), Point(775, 75),
+		Point(125, 125), Point(125, 175), Point(125, 225), Point(125, 275), Point(125, 325), Point(125, 375), Point(125, 425), Point(125, 475), Point(125, 525), Point(125, 575), Point(175, 125), Point(175, 175), Point(175, 225), Point(175, 275), Point(175, 325), Point(175, 375), Point(175, 425), Point(175, 475), Point(175, 525), Point(175, 575)
+    };
+
+    DataCenter* DC = DataCenter::get_instance();
+    for (int x = 25; x <= DC->game_field_length; x += 50) {
+        for (int y = 25; y <= DC->game_field_length; y += 50) {
+            Point p(x, y);
+            if (DC->character->shape->overlap(Rectangle{
+                p.x - 21.5, p.y - 21.5, p.x + 21.5, p.y + 21.5
+            })) {
+                continue;
+            }
+
+            bool collides_with_wall = false;
+            for (const auto& wall : DC->walls) {
+                if (wall->hitbox->overlap(Rectangle{
+                    p.x - 21.5, p.y - 21.5, p.x + 21.5, p.y + 21.5
+                })) {
+                    collides_with_wall = true;
+                    break;
+                }
+            }
+            for (const auto& wall2 : DC->walls2) {
+                if (wall2->hitbox->overlap(Rectangle{
+                    p.x - 21.5, p.y - 21.5, p.x + 21.5, p.y + 21.5
+                })) {
+                    collides_with_wall = true;
+                    break;
+                }
+            }
+			if (DC->rem->hitbox->overlap(Rectangle{
+                    p.x - 21.5, p.y - 21.5, p.x + 21.5, p.y + 21.5
+                }))
+
+            if (!collides_with_wall) {
+                candidate_positions.push_back(p);
+            }
+        }
+    }
+
+    if (candidate_positions.empty()) {
+        return;
+    }
+
+    int random_index = rand() % candidate_positions.size();
+    Point chosen_position = candidate_positions[random_index];
+
+    Wall2* new_wall2 = new Wall2(chosen_position, "./assets/image/Wall2.jpg");
+    DC->walls2.push_back(new_wall2);
+
+    last_generation_time = current_time;
+}
+
 
 void
 Level::draw() {

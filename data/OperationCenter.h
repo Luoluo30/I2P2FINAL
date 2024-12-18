@@ -25,6 +25,8 @@ public:
 private:
 	OperationCenter() {}
 private:
+	void _update_rem();
+	void _update_watermelon();
 	void _update_banana();
 	void _update_fruit();
 	void _update_wall();
@@ -37,6 +39,8 @@ private:
 	void _update_monster_player();
 	//void _update_fruit_character();
 private:
+	void _draw_rem();
+	void _draw_watermelon();
 	void _draw_banana();
 	void _draw_fruit();
 	void _draw_wall();

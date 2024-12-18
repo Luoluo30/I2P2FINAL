@@ -19,6 +19,7 @@ public:
 	void load_level(int lvl);
 	void update();
 	void draw();
+	void update_wall2_generation();
 	bool is_onroad(const Rectangle &region);
 	Rectangle grid_to_region(const Point &grid) const;
 	const std::vector<Point> &get_road_path() const
@@ -27,7 +28,8 @@ public:
 		int res = 0;
 		for(const int &i : num_of_monsters) res += i;
 		return res;
-	}
+	};
+	double countdown_timer = 1000;
 private:
 	/**
 	 * @brief Stores the monster's attack route, whose Point is represented in grid format.

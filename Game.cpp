@@ -19,9 +19,14 @@
 using namespace std;
 // fixed settings
 constexpr char game_icon_img_path[] = "./assets/image/game_icon.png";
-constexpr char game_start_sound_path[] = "./assets/sound/growl.wav";
+constexpr char game_start_sound_path[] = "./assets/sound/growl.mp3";
 constexpr char background_img_path[] = "./assets/image/StartBackground.jpg";
+constexpr char menu_img_path[] = "./assets/image/cover.png";
 constexpr char background_sound_path[] = "./assets/sound/winterscene.mp3";
+constexpr char lose_sound_path[] = "./assets/sound/lose.mp3";
+constexpr char win_sound_path[] = "./assets/sound/win.mp3";
+constexpr char pass_img_path[] = "./assets/image/pass.jpg";
+constexpr char fail_img_path[] = "./assets/image/fail.jpg";
 
 /**
  * @brief Game entry.
@@ -140,7 +145,10 @@ void Game::game_init() {
 	
 
     // 游戏开始界面设置
-    background = IC->get(background_img_path);
+    background = IC->get(menu_img_path);
+	level_background = IC->get(background_img_path);
+	pass_background = IC->get(pass_img_path);
+	fail_background = IC->get(fail_img_path);
     debug_log("Game state: change to START\n");
     state = STATE::START; // 设置初始状态为 START
     al_start_timer(timer); // 启动计时器
@@ -171,7 +179,7 @@ Game::game_update() {
 				cout<<"!is_played"<<endl;
 			}
 
-			if(!SC->is_playing(instance)) {
+			if(!SC->is_playing(instance)||DC->key_state[ALLEGRO_KEY_ENTER]) {
 				debug_log("<Game> state: change to LEVEL\n");
 				state = STATE::LEVEL;
 			}
@@ -195,9 +203,14 @@ Game::game_update() {
 				debug_log("<Game> state: change to END\n");
 				state = STATE::END;
 			}
-			if(DC->player->HP == 0) {
+			if(DC->player->HP <= 0) {
 				debug_log("<Game> state: change to END\n");
-				state = STATE::END;
+				state = STATE::FINAL_LOSE;
+			}
+			if(DC->player->watermelon == 40) {
+				final_score = (int)DC->level->countdown_timer; 
+				debug_log("<Game> state: change to END\n");
+				state = STATE::FINAL_WIN;
 			}
 			break;
 		} case STATE::PAUSE: {
@@ -207,7 +220,40 @@ Game::game_update() {
 				state = STATE::LEVEL;
 			}
 			break;
-		} case STATE::END: {
+		} case STATE::FINAL_WIN:{
+			static bool win_played = false;
+			cout<<"case STATE::FINAL_WIN"<<endl;
+			if(!win_played) {
+				if (background != nullptr && al_get_sample_instance_playing(background)) {
+            		al_stop_sample_instance(background);
+        		}
+				background = SC->play(win_sound_path, ALLEGRO_PLAYMODE_ONCE);
+				win_played = true;
+				cout<<"!BGM_played"<<endl;
+			}
+			if(DC->key_state[ALLEGRO_KEY_ENTER]) {
+				debug_log("<Game> state: change to end\n");
+				state = STATE::END;
+			}
+			break;
+		} case STATE::FINAL_LOSE:{
+			static bool lose_played = false;
+			cout<<"case STATE::LEVEL"<<endl;
+			if(!lose_played) {
+				if (background != nullptr && al_get_sample_instance_playing(background)) {
+            		al_stop_sample_instance(background);
+        		}
+				background = SC->play(lose_sound_path, ALLEGRO_PLAYMODE_ONCE);
+				lose_played = true;
+				cout<<"!BGM_played"<<endl;
+			}
+			if(DC->key_state[ALLEGRO_KEY_ENTER]) {
+				debug_log("<Game> state: change to end\n");
+				state = STATE::END;
+			}
+			break;
+		} 
+		case STATE::END: {
 			return false;
 		}
 	}
@@ -255,9 +301,12 @@ void Game::game_draw() {
 	cout<<"game_draw"<<endl;
     // 清空屏幕
     al_clear_to_color(al_map_rgb(100, 100, 100));
-    if(state != STATE::END) {
+	if(state == STATE::START){
+		al_draw_bitmap(background, -50, 0, 0);
+	}
+    if(state == STATE::LEVEL) {
         // 绘制背景
-        al_draw_bitmap(background, 0, 0, 0);
+        al_draw_bitmap(level_background, 0, 0, 0);
         if(DC->game_field_length < DC->window_width)
             al_draw_filled_rectangle(
                 DC->game_field_length, 0,
@@ -270,7 +319,7 @@ void Game::game_draw() {
                 al_map_rgb(100, 149, 237));
 
         // 用户界面
-        if(state != STATE::START) {
+        if(state == STATE::LEVEL) {
             DC->level->draw();
             DC->character->draw();
 			cout<<"A"<<endl;
@@ -280,18 +329,30 @@ void Game::game_draw() {
             OC->draw();
         }
     }
+	if(state == STATE::FINAL_WIN){
+		al_draw_bitmap(pass_background, 0, 0, 0);
+		al_draw_textf(
+		FC->courier_new[FontSize::LARGE], al_map_rgb(0,0, 20),
+		550, 500,
+		ALLEGRO_ALIGN_CENTER, "Score : %d ", final_score);
+	}
+	if(state == STATE::FINAL_LOSE){
+		al_draw_bitmap(fail_background, 0, 0, 0);
+	}
     // 状态切换
     switch(state) {
         case STATE::START: {
         } case STATE::LEVEL: {
             break;
-        } case STATE::PAUSE: {
+        } case STATE::FINAL_WIN:{
+		} case STATE::FINAL_LOSE:{
+		} case STATE::PAUSE: {
             // 游戏暂停界面
             al_draw_filled_rectangle(0, 0, DC->window_width, DC->window_height, al_map_rgba(50, 50, 50, 64));
-            al_draw_text(
-                FC->caviar_dreams[FontSize::LARGE], al_map_rgb(255, 255, 255),
-                DC->window_width/2., DC->window_height/2.,
-                ALLEGRO_ALIGN_CENTRE, "GAME PAUSED");
+            // al_draw_text(
+            //     FC->caviar_dreams[FontSize::LARGE], al_map_rgb(255, 255, 255),
+            //     DC->window_width/2., DC->window_height/2.,
+            //     ALLEGRO_ALIGN_CENTRE, "GAME PAUSED");
             break;
         } case STATE::END: {
         }

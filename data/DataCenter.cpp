@@ -4,9 +4,11 @@
 #include "../Character.h"
 #include "../Player.h"
 #include "../Fruit.h"
+#include "../Watermelon.h"
 #include "../Banana.h"
 #include "../Wall.h"
 #include "../Wall2.h"
+#include "../Rem.h"
 #include "../monsters/Monster.h"
 #include "../enemies/Enemy.h"
 #include "../towers/Tower.h"
@@ -33,12 +35,13 @@ DataCenter::DataCenter() {
 	player = new Player();
 	level = new Level();
 	character = new Character();
-	
+	rem = new Rem(Point(70, 400));
 }
 
 DataCenter::~DataCenter() {
 	delete player;
 	delete level;
+	delete rem;
 	for(Wall *&w : walls){
 		delete w;
 	}
@@ -62,5 +65,8 @@ DataCenter::~DataCenter() {
 	}
 	for(Banana *&b : bananas){
 		delete b;
+	}
+	for(Watermelon *&w : watermelons){
+		delete w;
 	}
 }

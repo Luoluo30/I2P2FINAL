@@ -6,13 +6,21 @@
 #include "../towers/Bullet.h"
 #include "../Player.h"
 #include "../Character.h"
+#include "../Rem.h"
 #include "../Fruit.h"
+#include "../Watermelon.h"
 #include "../Banana.h"
 #include "../Wall.h"
 #include "../Wall2.h"
 #include <iostream>
 using namespace std;
 void OperationCenter::update() {
+	// Update watermelons.
+	_update_watermelon();
+	cout<<"_update_watermelon();"<<endl;
+	// Update bananas.
+	_update_rem();
+	cout<<"_update_rem();"<<endl;
 	// Update bananas.
 	_update_banana();
 	cout<<"_update_banana();"<<endl;
@@ -46,6 +54,17 @@ void OperationCenter::update() {
 	//_update_fruit_character();
 	//cout<<"_update_fruit_character();"<<endl;
 }
+
+void OperationCenter::_update_rem() {
+	auto r = DataCenter::get_instance()->rem;
+	r->update();
+} 
+
+void OperationCenter::_update_watermelon() {
+	std::vector<Watermelon*> &watermelons = DataCenter::get_instance()->watermelons;
+	for(Watermelon *watermelon : watermelons)
+		watermelon->update();
+} 
 
 void OperationCenter::_update_banana() {
 	std::vector<Banana*> &bananas = DataCenter::get_instance()->bananas;
@@ -145,6 +164,8 @@ void OperationCenter::_update_monster_player() {
 }
 
 void OperationCenter::draw() {
+	_draw_rem();
+	_draw_watermelon();
 	_draw_banana();
 	_draw_fruit();
 	_draw_wall();
@@ -153,6 +174,17 @@ void OperationCenter::draw() {
 	_draw_enemy();
 	_draw_tower();
 	_draw_towerBullet();
+}
+
+void OperationCenter::_draw_rem() {
+	auto r = DataCenter::get_instance()->rem;
+	r->draw();
+} 
+
+void OperationCenter::_draw_watermelon() {
+	std::vector<Watermelon*> &watermelons = DataCenter::get_instance()->watermelons;
+	for(Watermelon *watermelon : watermelons)
+		watermelon->draw();
 }
 
 void OperationCenter::_draw_banana() {

@@ -17,8 +17,10 @@ class Bullet;
 class Character;
 class Fruit;
 class Banana;
+class Watermelon;
 class Wall;
 class Wall2;
+class Rem;
 /**
  * @brief Stores generic global data and relatively small data structures.
  * @details The globally used data such as FPS (frames per second), windows size, game region, and states of input devices (mouse and keyboard).
@@ -88,7 +90,9 @@ public:
 	 * @see Monster
 	 */
 	Character *character;
+	Rem *rem;
 	
+	std::vector<Watermelon*> watermelons;
 	std::vector<Banana*> bananas;
 	std::vector<Fruit*> fruits;
 	std::vector<Wall*> walls;

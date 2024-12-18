@@ -27,17 +27,23 @@ private:
 		START, // -> LEVEL
 		LEVEL, // -> PAUSE, END
 		PAUSE, // -> LEVEL
+		FINAL_WIN,
+		FINAL_LOSE,
 		END
 	};
 	STATE state;
 	ALLEGRO_EVENT event;
 	ALLEGRO_BITMAP *game_icon;
 	ALLEGRO_BITMAP *background;
+	ALLEGRO_BITMAP* level_background;
+	ALLEGRO_BITMAP* pass_background;
+	ALLEGRO_BITMAP* fail_background;
 private:
 	ALLEGRO_DISPLAY *display;
 	ALLEGRO_TIMER *timer;
 	ALLEGRO_EVENT_QUEUE *event_queue;
 	UI *ui;
+	int final_score;
 };
 
 #endif
